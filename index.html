@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="description" content="Stuyvesant Rod & Gun Club: non-profit indoor pistol range in Middle Village, Queens.">
+<title>Stuyvesant Rod &amp; Gun Club</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F3F4F2; --surface:#FFFFFF; --sunk:#E9ECEA; --ink:#151B22; --muted:#56616C; --line:#D5DADC;
+  --steel:#18222D; --steel-2:#223040; --on-steel:#F1EEE7; --on-steel-muted:#AEB6BE;
+  --brass:#8A5F1E; --brass-bright:#C8923F; --brass-soft:#F1E6D1;
+  --open:#23704A; --open-soft:#DCEFE3; --closed:#A5261F; --closed-soft:#F6DEDC;
+  --c-training:#2D5F8B; --c-club:#8A5F1E; --c-meeting:#5B4A8B; --c-closure:#A5261F;
+  --display:"Barlow Condensed","Arial Narrow",Impact,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:6px; --wrap:1160px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --bg:#0F1419; --surface:#161D25; --sunk:#1C252F; --ink:#E7EAEC; --muted:#9AA4AE; --line:#2A343F;
+  --steel:#0A0F14; --steel-2:#131B24;
+  --brass:#D6A75C; --brass-bright:#D6A75C; --brass-soft:#33291A;
+  --open:#62C98E; --open-soft:#15301F; --closed:#F07A70; --closed-soft:#3A1917;
+  --c-training:#7FB0DD; --c-club:#D6A75C; --c-meeting:#B3A2E6; --c-closure:#F07A70;
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F1419; --surface:#161D25; --sunk:#1C252F; --ink:#E7EAEC; --muted:#9AA4AE; --line:#2A343F;
+  --steel:#0A0F14; --steel-2:#131B24;
+  --brass:#D6A75C; --brass-bright:#D6A75C; --brass-soft:#33291A;
+  --open:#62C98E; --open-soft:#15301F; --closed:#F07A70; --closed-soft:#3A1917;
+  --c-training:#7FB0DD; --c-club:#D6A75C; --c-meeting:#B3A2E6; --c-closure:#F07A70;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.02;text-wrap:balance;margin:0;letter-spacing:.005em}
+h2{font-size:clamp(2rem,4.4vw,3rem);text-transform:uppercase}
+h3{font-size:1.45rem;text-transform:uppercase;font-weight:600}
+p{margin:0}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-inline:20px}
+.eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--brass)}
+.muted{color:var(--muted)}
+.tnum{font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--brass-bright);outline-offset:2px}
+button,input,textarea,select{font:inherit;color:inherit}
+.btn{display:inline-flex;align-items:center;gap:.45em;border:1px solid var(--line);background:var(--surface);padding:.55em 1em;border-radius:var(--r);font-weight:600;font-size:.92rem;cursor:pointer;text-decoration:none;line-height:1.2}
+.btn:hover{border-color:var(--brass)}
+.btn.primary{background:var(--brass-bright);border-color:var(--brass-bright);color:#16110A}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--closed);border-color:color-mix(in srgb,var(--closed) 40%,transparent)}
+.btn.sm{font-size:.8rem;padding:.4em .7em}
+
+/* preview */
+.preview-bar{background:var(--steel);color:var(--on-steel-muted);font-size:.8rem;border-bottom:1px solid #ffffff1f}
+.preview-bar .wrap{padding-block:.4rem}
+/* banner */
+.banner{background:var(--brass-bright);color:#16110A;font-weight:600;font-size:.95rem}
+.banner .wrap{display:flex;gap:.8em;align-items:center;padding-block:.6rem}
+.banner .tag{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;border:1.5px solid currentColor;padding:.1em .5em;border-radius:3px;white-space:nowrap}
+
+/* header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;gap:1rem;min-height:62px}
+.brand{display:flex;align-items:center;gap:.65rem;text-decoration:none;margin-right:auto}
+.brand .mark{width:36px;height:36px;flex:none}
+.brand b{white-space:nowrap;font-family:var(--display);font-size:1.28rem;text-transform:uppercase;letter-spacing:.02em;line-height:1;display:block}
+.brand small{font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+nav.main{display:flex;gap:.2rem}
+nav.main a{white-space:nowrap;font-family:var(--display);text-transform:uppercase;font-weight:600;font-size:1.02rem;letter-spacing:.04em;text-decoration:none;padding:.35rem .6rem;border-radius:4px;color:var(--muted)}
+nav.main a:hover{color:var(--ink);background:var(--sunk)}
+.menu-btn{display:none}
+@media (max-width:440px){.brand b{white-space:normal;font-size:1.1rem}.brand small{display:none}.brand{min-width:0}}
+.admin-toggle[aria-pressed="true"]{background:var(--brass-bright);border-color:var(--brass-bright);color:#16110A}
+@media (max-width:1080px){
+  nav.main{position:absolute;left:0;right:0;top:100%;flex-direction:column;background:var(--bg);border-bottom:1px solid var(--line);padding:.5rem 20px 1rem;display:none}
+  nav.main.open{display:flex}
+  .menu-btn{display:inline-flex}
+}
+
+/* hero */
+.hero{background:var(--steel);color:var(--on-steel);position:relative;overflow:hidden}
+.hero .cover{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.42}
+.hero .cover::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--steel) 10%,transparent 85%)}
+.hero svg.rings{position:absolute;right:-120px;top:50%;transform:translateY(-50%);width:640px;height:640px;opacity:.9;pointer-events:none}
+.hero .wrap{position:relative;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:2.5rem;padding-block:clamp(3rem,7vw,5.5rem);align-items:end}
+.hero h1{font-size:clamp(3rem,8.5vw,6.4rem);text-transform:uppercase;line-height:.9}
+.hero h1 span{color:var(--brass-bright)}
+.hero .lede{margin-top:1.2rem;max-width:34em;color:var(--on-steel-muted);font-size:1.08rem}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.6rem}
+.hero .btn.ghost{color:var(--on-steel);border-color:#ffffff40}
+.hero .eyebrow{color:var(--brass-bright)}
+.pistol-only{display:inline-flex;align-items:center;gap:.5rem;margin-bottom:1.1rem;font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;border:1px solid #ffffff38;padding:.35em .75em;border-radius:3px;color:var(--on-steel)}
+.pistol-only i{width:7px;height:7px;border-radius:50%;background:var(--brass-bright)}
+.status{background:#0000004d;border:1px solid #ffffff24;border-radius:10px;padding:1.3rem 1.4rem;backdrop-filter:blur(6px)}
+.status .state{display:flex;align-items:center;gap:.6rem;font-family:var(--display);font-size:2.2rem;text-transform:uppercase;font-weight:700;line-height:1}
+.status .dot{width:14px;height:14px;border-radius:50%;flex:none}
+.status .dot.on{background:#62C98E;box-shadow:0 0 0 5px #62C98E33}
+.status .dot.off{background:#F07A70;box-shadow:0 0 0 5px #F07A7033}
+.status .detail{margin-top:.5rem;color:var(--on-steel);font-weight:500}
+.status .why{margin-top:.2rem;color:var(--on-steel-muted);font-size:.9rem}
+.status .today{margin-top:1rem;padding-top:1rem;border-top:1px solid #ffffff1f;display:flex;justify-content:space-between;gap:1rem;font-size:.9rem;color:var(--on-steel-muted)}
+.status .today b{color:var(--on-steel);font-family:var(--mono);font-weight:500}
+@media (max-width:820px){.hero .wrap{grid-template-columns:1fr}.hero svg.rings{width:440px;height:440px;right:-180px;top:30%}}
+
+/* sections */
+section.block{padding-block:clamp(3rem,7vw,5rem)}
+section.block + section.block{border-top:1px solid var(--line)}
+.head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:1rem;margin-bottom:2rem}
+.head .eyebrow{display:block;margin-bottom:.5rem}
+.head p{max-width:38em;margin-top:.6rem}
+
+/* hours + upcoming */
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:2rem}
+@media (max-width:860px){.split{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.4rem}
+.panel h3{margin-bottom:1rem}
+table.hours{width:100%;border-collapse:collapse}
+table.hours td{padding:.62rem 0;border-bottom:1px solid var(--line)}
+table.hours tr:last-child td{border-bottom:0}
+table.hours td:last-child{text-align:right;font-family:var(--mono);font-size:.92rem}
+table.hours tr.is-today td{font-weight:600}
+table.hours tr.is-today td:first-child::after{content:"Today";margin-left:.55rem;font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;background:var(--brass-soft);color:var(--brass);padding:.15em .45em;border-radius:3px;vertical-align:2px}
+.closed-txt{color:var(--closed)}
+.hours-note{margin-top:1rem;font-size:.9rem;color:var(--muted)}
+.override{margin-top:1rem;background:var(--closed-soft);color:var(--closed);border-radius:6px;padding:.6rem .8rem;font-size:.9rem;font-weight:500}
+.ev-list{display:flex;flex-direction:column}
+.ev{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:1rem;padding:.9rem 0;border-bottom:1px solid var(--line);align-items:start}
+.ev:last-child{border-bottom:0}
+.ev .date{border:1px solid var(--line);border-radius:6px;text-align:center;overflow:hidden;background:var(--bg)}
+.ev .date .m{display:block;font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;background:var(--steel);color:var(--on-steel);padding:.15em 0}
+.ev .date .d{display:block;font-family:var(--display);font-weight:700;font-size:1.7rem;line-height:1.25}
+.ev .t{font-weight:600;line-height:1.35}
+.ev .meta{font-size:.88rem;color:var(--muted);margin-top:.15rem}
+.ev .desc{font-size:.92rem;margin-top:.35rem}
+.ev .acts{display:flex;gap:.35rem}
+.chip{display:inline-block;font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;padding:.12em .5em;border-radius:3px;border:1px solid currentColor;margin-right:.4rem;vertical-align:1px}
+.cat-training{color:var(--c-training)} .cat-club{color:var(--c-club)} .cat-meeting{color:var(--c-meeting)} .cat-closure{color:var(--c-closure)}
+.empty{color:var(--muted);font-size:.95rem;padding:.6rem 0}
+
+/* calendar */
+.cal-bar{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}
+.cal-bar .month{font-family:var(--display);font-size:1.9rem;font-weight:700;text-transform:uppercase;min-width:9ch}
+.legend{display:flex;flex-wrap:wrap;gap:.2rem .1rem;margin-left:auto}
+.cal-scroll{overflow-x:auto}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--line);gap:1px}
+.cal .dow{background:var(--sunk);font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;text-align:center;padding:.45rem 0;color:var(--muted)}
+.cal .day{background:var(--surface);min-height:108px;padding:.4rem .45rem;display:flex;flex-direction:column;gap:.25rem;min-width:0}
+.cal .day.out{background:var(--bg)}
+.cal .day.out .n{opacity:.4}
+.cal .day .n{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.cal .day.today .n{background:var(--brass-bright);color:#16110A;border-radius:4px;padding:0 .35em;align-self:flex-start;font-weight:500}
+.cal .day.shut{background-image:repeating-linear-gradient(135deg,transparent 0 7px,color-mix(in srgb,var(--closed) 9%,transparent) 7px 8px)}
+.cal .e{font-size:.74rem;line-height:1.25;padding:.2em .4em;border-radius:3px;border-left:3px solid currentColor;background:var(--sunk);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;text-align:left;border-top:0;border-right:0;border-bottom:0;width:100%}
+.cal .e span{color:var(--ink)}
+@media (max-width:640px){
+  .cal .day{min-height:58px;padding:.3rem}
+  .cal .e{font-size:0;padding:0;height:6px;border-left:0;background:currentColor;border-radius:3px}
+  .legend{margin-left:0;width:100%}
+}
+.cal-agenda{margin-top:1.5rem}
+
+/* membership */
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem}
+.tier{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.5rem;display:flex;flex-direction:column;gap:.8rem}
+.tier.main{border-color:var(--brass-bright);box-shadow:0 0 0 1px var(--brass-bright)}
+.price{font-family:var(--display);font-size:3.2rem;font-weight:700;line-height:1}
+.price small{font-family:var(--body);font-size:.95rem;font-weight:500;color:var(--muted);margin-left:.2rem}
+ul.ticks{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.45rem;font-size:.95rem}
+ul.ticks li{padding-left:1.3rem;position:relative}
+ul.ticks li::before{content:"";position:absolute;left:0;top:.6em;width:8px;height:8px;border-radius:50%;border:2px solid var(--brass-bright)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:1.5rem}
+.step{border-top:2px solid var(--ink);padding-top:.8rem}
+.step .k{font-family:var(--mono);font-size:.72rem;color:var(--brass);letter-spacing:.1em}
+.step b{display:block;margin:.2rem 0}
+.step p{font-size:.92rem;color:var(--muted)}
+
+/* training */
+.feature{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:0;background:var(--steel);color:var(--on-steel);border-radius:12px;overflow:hidden;margin-bottom:1.5rem}
+.feature .body{padding:clamp(1.4rem,4vw,2.4rem);display:flex;flex-direction:column;gap:1rem}
+.feature .eyebrow{color:var(--brass-bright)}
+.feature h3{font-size:clamp(1.8rem,4vw,2.6rem)}
+.feature .facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:#ffffff1f;align-content:stretch}
+.feature .facts div{background:var(--steel-2);padding:1.2rem;display:flex;flex-direction:column;justify-content:flex-end}
+.feature .facts b{font-family:var(--display);font-size:2rem;line-height:1;color:var(--brass-bright)}
+.feature .facts span{font-size:.82rem;color:var(--on-steel-muted);margin-top:.35rem}
+.feature ul.ticks li{color:var(--on-steel-muted)}
+.feature .btn.ghost{color:var(--on-steel);border-color:#ffffff40}
+@media (max-width:820px){.feature{grid-template-columns:1fr}.feature .facts{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:480px){.feature .facts{grid-template-columns:1fr 1fr}}
+.courses{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+@media (max-width:860px){.courses{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:540px){.courses{grid-template-columns:1fr}}
+.course{background:var(--surface);padding:1.2rem 1.3rem}
+.course .code{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--brass);text-transform:uppercase}
+.course b{display:block;font-size:1.02rem;margin:.25rem 0 .2rem;line-height:1.3}
+.course p{font-size:.9rem;color:var(--muted)}
+
+/* amenities + rules */
+.amen{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem}
+.amen div b{display:block;font-family:var(--display);text-transform:uppercase;font-size:1.3rem;font-weight:600;margin-bottom:.3rem}
+.amen div p{font-size:.93rem;color:var(--muted)}
+.rules-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:2.5rem;margin-top:3rem}
+@media (max-width:860px){.rules-grid{grid-template-columns:1fr}}
+.callout{background:var(--steel);color:var(--on-steel);border-radius:10px;padding:1.6rem;align-self:start}
+.callout .big{font-family:var(--display);font-size:2.3rem;text-transform:uppercase;font-weight:700;line-height:.95}
+.callout .big span{color:var(--brass-bright)}
+.callout p{margin-top:.8rem;color:var(--on-steel-muted);font-size:.95rem}
+ol.rules{list-style:none;counter-reset:r;padding:0;margin:0;columns:2;column-gap:2rem}
+@media (max-width:640px){ol.rules{columns:1}}
+ol.rules li{counter-increment:r;break-inside:avoid;display:grid;grid-template-columns:2.2rem 1fr;padding:.45rem 0;border-bottom:1px solid var(--line);font-size:.94rem}
+ol.rules li::before{content:counter(r,decimal-leading-zero);font-family:var(--mono);font-size:.78rem;color:var(--brass);padding-top:.15rem}
+ol.rules li.key{font-weight:600}
+
+/* gallery */
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem}
+.ph{position:relative;aspect-ratio:4/3;border-radius:8px;overflow:hidden;background:var(--sunk);max-width:100%}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph.placeholder{display:flex;align-items:flex-end;padding:.8rem;border:1px dashed var(--line);background:repeating-linear-gradient(135deg,var(--sunk) 0 10px,var(--bg) 10px 20px)}
+.ph.placeholder span{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+.ph .cap{position:absolute;left:0;right:0;bottom:0;padding:1.6rem .75rem .6rem;background:linear-gradient(transparent,#000000b3);color:#fff;font-size:.85rem}
+.ph .tools{position:absolute;top:.5rem;right:.5rem;display:flex;gap:.3rem;flex-wrap:wrap;justify-content:flex-end}
+.ph .tools .btn{background:#000000a6;color:#fff;border-color:#ffffff40}
+.ph .cover-tag{position:absolute;top:.5rem;left:.5rem;font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;background:var(--brass-bright);color:#16110A;padding:.2em .5em;border-radius:3px}
+.upload-note{font-size:.88rem;color:var(--muted)}
+
+/* info */
+.info{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2rem}
+.info h3{font-size:1.2rem;margin-bottom:.7rem}
+.links{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.35rem;font-size:.94rem}
+.links a{text-decoration-color:var(--line);text-underline-offset:3px}
+.links a:hover{text-decoration-color:var(--brass)}
+
+/* footer */
+footer{background:var(--steel);color:var(--on-steel);padding-block:3.5rem 2rem}
+footer .grid{display:grid;grid-template-columns:minmax(0,1.3fr) repeat(2,minmax(0,1fr));gap:2rem}
+@media (max-width:760px){footer .grid{grid-template-columns:1fr}}
+footer h2{font-size:2.4rem}
+footer .k{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--brass-bright);display:block;margin-bottom:.35rem}
+footer .v{font-size:1.02rem;user-select:all}
+footer .row{display:flex;flex-direction:column;gap:1.1rem}
+footer .muted{color:var(--on-steel-muted)}
+footer .btn{color:var(--on-steel);background:transparent;border-color:#ffffff40}
+.copy{background:none;border:0;color:var(--brass-bright);font-size:.78rem;cursor:pointer;padding:0 .3rem;font-family:var(--mono)}
+.legal{margin-top:2.5rem;padding-top:1.2rem;border-top:1px solid #ffffff1f;font-size:.82rem;color:var(--on-steel-muted);display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between}
+
+/* admin */
+.admin-only{display:none}
+body.editing .admin-only{display:revert}
+body.editing .admin-flex{display:flex}
+.admin-flex{display:none}
+.admin-box{border:1.5px dashed var(--brass-bright);border-radius:10px;padding:1.1rem;background:var(--brass-soft);margin-top:1rem}
+.admin-box .lbl{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--brass);margin-bottom:.6rem;display:block}
+.field{display:flex;flex-direction:column;gap:.25rem;font-size:.85rem;font-weight:500}
+.field input,.field textarea,.field select{background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:.5rem .6rem;font-size:.95rem;font-weight:400;width:100%}
+.field textarea{min-height:80px;resize:vertical}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.7rem}
+.hrow{display:grid;grid-template-columns:5.5rem auto minmax(0,1fr) minmax(0,1fr);gap:.5rem;align-items:center;padding:.3rem 0;font-size:.9rem}
+.hrow input[type=time]{background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:.35rem .4rem;width:100%;min-width:0}
+.hrow input:disabled{opacity:.35}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:.6rem 1rem;border-radius:6px;font-size:.9rem;z-index:50;box-shadow:0 6px 24px #0004}
+.modal-bg{position:fixed;inset:0;background:#0009;z-index:40;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--surface);border-radius:12px;padding:1.4rem;width:min(560px,100%);max-height:90vh;overflow:auto;display:flex;flex-direction:column;gap:.9rem}
+.modal h3{font-size:1.6rem}
+.modal .acts{display:flex;gap:.5rem;justify-content:flex-end;flex-wrap:wrap}
+.warn{background:var(--brass-soft);color:var(--brass);border-radius:6px;padding:.55rem .75rem;font-size:.85rem;font-weight:500;margin-bottom:.8rem}
+@media (prefers-reduced-motion:no-preference){.btn,.cal .e{transition:border-color .15s,filter .15s}}
+</style>
+</head>
+<body>
+
+
+<div class="preview-bar"><div class="wrap">Design preview of a proposed new website. Not the official club site; hours and details shown here are not final.</div></div>
+<div class="banner" id="banner" hidden><div class="wrap"><span class="tag">Notice</span><span id="bannerText"></span></div></div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Stuyvesant Rod and Gun Club home">
+      <svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="12" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="5.5" fill="var(--brass-bright)"/><path d="M20 0v7M20 33v7M0 20h7M33 20h7" stroke="currentColor" stroke-width="2"/></svg>
+      <span><b>Stuyvesant Rod &amp; Gun</b><small>Middle Village · Queens</small></span>
+    </a>
+    <nav class="main" id="nav">
+      <a href="#hours">Hours</a><a href="#calendar">Calendar</a><a href="#membership">Membership</a><a href="#training">Training</a><a href="#range">The Range</a><a href="#gallery">Gallery</a><a href="#contact">Contact</a>
+    </nav>
+    <button class="btn sm admin-toggle" id="adminToggle" aria-pressed="false" hidden>Manage site</button>
+    <button class="btn sm menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav">Menu</button>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero">
+  <div class="cover" id="heroCover" hidden></div>
+  <svg class="rings" viewBox="0 0 400 400" aria-hidden="true" id="heroRings">
+    <g fill="none" stroke="#ffffff" stroke-opacity=".09" stroke-width="1.5">
+      <circle cx="200" cy="200" r="196"/><circle cx="200" cy="200" r="168"/><circle cx="200" cy="200" r="140"/><circle cx="200" cy="200" r="112"/>
+    </g>
+    <circle cx="200" cy="200" r="84" fill="#ffffff" fill-opacity=".05"/>
+    <g fill="none" stroke="#C8923F" stroke-opacity=".5" stroke-width="1.5"><circle cx="200" cy="200" r="56"/><circle cx="200" cy="200" r="28"/></g>
+    <circle cx="200" cy="200" r="10" fill="#C8923F" fill-opacity=".6"/>
+    <g fill="#ffffff" fill-opacity=".22" font-family="IBM Plex Mono,monospace" font-size="11"><text x="200" y="22" text-anchor="middle">6</text><text x="200" y="50" text-anchor="middle">7</text><text x="200" y="78" text-anchor="middle">8</text><text x="200" y="106" text-anchor="middle">9</text></g>
+  </svg>
+  <div class="wrap">
+    <div>
+      <div class="pistol-only"><i></i>Pistol range · Handguns only</div>
+      <h1>Stuyvesant<br>Rod <span>&amp;</span> Gun Club</h1>
+      <p class="lede">A non-profit, NYPD-authorized indoor pistol range in Middle Village, Queens. Run by shooters for shooters, and part of the New York shooting community for over 50 years.</p>
+      <div class="ctas"><a class="btn primary" href="#membership">Become a member</a><a class="btn ghost" href="#training">CCW training</a></div>
+    </div>
+    <div class="status" aria-live="polite">
+      <div class="eyebrow">Range status · New York time</div>
+      <div class="state" style="margin-top:.6rem"><span class="dot" id="stDot"></span><span id="stState">Checking…</span></div>
+      <div class="detail" id="stDetail"></div>
+      <div class="why" id="stWhy"></div>
+      <div class="today"><span>Today</span><b id="stToday" class="tnum"></b></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="hours">
+  <div class="wrap">
+    <div class="head"><div><span class="eyebrow">Plan your visit</span><h2>Hours &amp; what's coming up</h2></div></div>
+    <div class="split">
+      <div class="panel">
+        <h3>Hours of operation</h3>
+        <div class="warn admin-only" id="hoursWarn" hidden>These weekly hours are placeholders from the site build. Confirm them below.</div>
+        <table class="hours tnum" id="hoursTable"></table>
+        <div class="override" id="hoursOverride" hidden></div>
+        <p class="hours-note" id="hoursNote"></p>
+        <div class="admin-box admin-only">
+          <span class="lbl">Edit weekly hours</span>
+          <div id="hoursForm"></div>
+          <label class="field" style="margin-top:.6rem">Note under the hours<textarea id="hoursNoteIn"></textarea></label>
+          <label style="display:flex;gap:.4rem;align-items:center;font-size:.88rem;margin-top:.6rem"><input type="checkbox" id="hoursConfirmed"> These hours are confirmed</label>
+          <div style="display:flex;gap:.5rem;margin-top:.8rem"><button class="btn primary sm" id="saveHours">Save hours</button></div>
+          <p class="upload-note" style="margin-top:.6rem">For one-off closures (holidays, renovations, classes that take over the range), add a <b>Closure</b> event to the calendar. The status box and hours table pick it up automatically.</p>
+        </div>
+      </div>
+      <div class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1rem"><h3 style="margin:0">Upcoming</h3><a href="#calendar" class="btn sm ghost">Full calendar</a></div>
+        <div class="ev-list" id="upcoming"></div>
+        <div class="admin-box admin-only"><span class="lbl">Banner notice (top of page)</span>
+          <label class="field">Message<textarea id="bannerIn" placeholder="e.g. Closed Saturday for CCW class"></textarea></label>
+          <div style="display:flex;gap:.8rem;align-items:center;margin-top:.6rem;flex-wrap:wrap"><label style="display:flex;gap:.4rem;align-items:center;font-size:.88rem"><input type="checkbox" id="bannerOn"> Show banner</label><button class="btn primary sm" id="saveBanner">Save banner</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="calendar">
+  <div class="wrap">
+    <div class="head"><div><span class="eyebrow">Calendar</span><h2>Classes, meetings &amp; closures</h2></div><button class="btn primary admin-only" id="addEvent">Add event</button></div>
+    <div class="cal-bar">
+      <button class="btn sm" id="prevM" aria-label="Previous month">‹</button>
+      <span class="month" id="monthLbl"></span>
+      <button class="btn sm" id="nextM" aria-label="Next month">›</button>
+      <button class="btn sm ghost" id="todayM">Today</button>
+      <div class="legend"><span class="chip cat-training">Training</span><span class="chip cat-club">Club</span><span class="chip cat-meeting">Meeting</span><span class="chip cat-closure">Closure</span></div>
+    </div>
+    <div class="cal-scroll"><div class="cal tnum" id="cal"></div></div>
+    <div class="cal-agenda panel"><h3 id="agendaTitle">This month</h3><div class="ev-list" id="agenda"></div></div>
+  </div>
+</section>
+
+<section class="block" id="membership">
+  <div class="wrap">
+    <div class="head"><div><span class="eyebrow">Membership</span><h2>Join the club</h2><p class="muted">Membership is annual and covers unlimited range time at a small per-session fee. Stop by during open hours to pick up an application packet.</p></div></div>
+    <div class="tiers">
+      <div class="tier main">
+        <span class="eyebrow">Regular member</span>
+        <div class="price tnum">$375<small>/ year</small></div>
+        <ul class="ticks"><li>Unlimited range time, $3 per shooting session</li><li>Free targets, cleaning supplies and work area</li><li>Locker rental available</li><li>Notary services for members</li><li>General membership meetings</li></ul>
+      </div>
+      <div class="tier">
+        <span class="eyebrow">Junior member · ages 12–21</span>
+        <div class="price tnum">$40<small>/ year</small></div>
+        <ul class="ticks"><li>Requires a sponsoring family member who is a club member</li><li>Ask at the club about junior shooting rules</li></ul>
+      </div>
+      <div class="tier">
+        <span class="eyebrow">Already a member?</span>
+        <div class="price" style="font-size:2.2rem">Renew</div>
+        <ul class="ticks"><li>Renew at the club or online</li><li>We accept credit card, check or cash</li></ul>
+        <a class="btn" style="align-self:flex-start;margin-top:auto" href="https://www.stuyvesantrodandgunclub.org/membership" target="_blank" rel="noopener">Renew membership</a>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="k">STEP 1</span><b>Get your license in order</b><p>Members must carry the appropriate NYC licenses and documentation. Applications go through the NYPD online licensing portal.</p></div>
+      <div class="step"><span class="k">STEP 2</span><b>Pick up a packet</b><p>Visit during open hours for a membership application packet.</p></div>
+      <div class="step"><span class="k">STEP 3</span><b>Submit and pay</b><p>Return the completed application with your dues by card, check or cash.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="training">
+  <div class="wrap">
+    <div class="head"><div><span class="eyebrow">Training</span><h2>Courses &amp; certification</h2><p class="muted">Classroom and range work at one location. Open to members and non-members. Register by email at <b>srgctrain@gmail.com</b>.</p></div></div>
+    <div class="feature">
+      <div class="body">
+        <span class="eyebrow">Next class · <span id="ccwNext">Oct 24 &amp; 25 · 9:00 AM</span></span>
+        <h3>18-hour New York concealed carry</h3>
+        <p style="color:var(--on-steel-muted)">The 18-hour course required for a New York CCW permit, taught by certified instructors with real-world experience. No prior experience or license needed.</p>
+        <ul class="ticks"><li>Range time, firearm use and ammunition included</li><li>Help with your license application</li><li>No hidden fees or up-charges</li><li>Group discount for 2 or more people</li></ul>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap"><a class="btn primary" href="mailto:srgctrain@gmail.com?subject=CCW%20class%20registration">Email to register</a><span style="align-self:center;font-size:.85rem;color:var(--on-steel-muted)">Spots fill up fast</span></div>
+      </div>
+      <div class="facts tnum">
+        <div><b>$399</b><span>All-inclusive price</span></div>
+        <div><b>18 hr</b><span>NYS requirement</span></div>
+        <div><b>2 hr</b><span>NYC requalification also offered</span></div>
+      </div>
+    </div>
+    <div class="courses">
+      <div class="course"><span class="code">NYC · 2 hr</span><b>CCW requalification</b><p>The 2-hour live-fire requalification for NYC license renewal.</p></div>
+      <div class="course"><span class="code">NRA</span><b>Basic Pistol</b><p>NRA Basics of Pistol Shooting course for new shooters.</p></div>
+      <div class="course"><span class="code">NRA RTBAV</span><b>Refuse To Be A Victim</b><p>NRA personal safety and awareness seminar.</p></div>
+      <div class="course"><span class="code">AVIRT</span><b>Active violence response</b><p>Active Violence Emergency Response Training.</p></div>
+      <div class="course"><span class="code">Red Cross · HSI</span><b>First aid, CPR, AED &amp; Stop the Bleed</b><p>Licensed training provider for the Red Cross and Health &amp; Safety Institute.</p></div>
+      <div class="course"><span class="code">New Jersey</span><b>NJ non-resident CCW</b><p>New Jersey CCARE class for non-resident carry permits.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="range">
+  <div class="wrap">
+    <div class="head"><div><span class="eyebrow">The range</span><h2>Member amenities</h2></div></div>
+    <div class="amen">
+      <div><b>Unlimited range time</b><p>Shoot as often as you like for $3 a session. Targets are free.</p></div>
+      <div><b>Cleaning area</b><p>Cleaning supplies and a work area for members. No live ammunition in the cleaning area.</p></div>
+      <div><b>Locker rental</b><p>Store eye and ear protection, range gear and cleaning supplies. No firearms or ammunition in lockers.</p></div>
+      <div><b>Refreshments &amp; notary</b><p>Coffee, tea and soda for a small fee. Notary services for members only.</p></div>
+    </div>
+    <div class="rules-grid">
+      <div class="callout">
+        <div class="big">Handguns <span>only.</span></div>
+        <p>Stuyvesant is a pistol range. No rifles, no shotguns and no magnum calibers on the line. Obey the range officer or instructor on duty at all times.</p>
+        <p>Wash your hands with soap and cold water after shooting.</p>
+      </div>
+      <div>
+        <h3 style="margin-bottom:.8rem">Range rules</h3>
+        <ol class="rules">
+          <li>Treat every firearm as if it is loaded.</li>
+          <li>Always keep the firearm pointed in a safe direction.</li>
+          <li>Keep your finger off the trigger until ready to shoot.</li>
+          <li>Keep the firearm unloaded until ready to use.</li>
+          <li>Know how to safely operate your firearm.</li>
+          <li>Use only the correct ammunition for your firearm.</li>
+          <li>Wear appropriate eye and ear protection.</li>
+          <li>Wash hands thoroughly with soap and cold water after shooting.</li>
+          <li>No alcohol, marijuana or any substance, legal or illegal, that may impair safe handling.</li>
+          <li>Keep the muzzle downrange at all times, even when clearing a malfunction.</li>
+          <li>No disruptive behavior or distractions while others are shooting.</li>
+          <li>Show proper etiquette and respect for other members.</li>
+          <li>Carry the appropriate licenses and documentation.</li>
+          <li>No live ammunition in the cleaning area.</li>
+          <li>No firearms or ammunition stored in personal lockers.</li>
+          <li>Push brass out to the range floor, remove used targets and clear trash from ports.</li>
+          <li class="key">Handguns only. No rifles, shotguns or magnum calibers.</li>
+          <li>Obey all commands of the range officer or instructor on duty.</li>
+          <li class="key">Above all, safety is the top priority.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="gallery">
+  <div class="wrap">
+    <div class="head"><div><span class="eyebrow">Gallery</span><h2>Inside the club</h2><p class="muted">The range has just been renovated. New photos are on the way.</p></div>
+      <div class="admin-only" style="text-align:right"><label class="btn primary" for="photoIn" style="cursor:pointer">Add photos</label><input type="file" id="photoIn" accept="image/*" multiple hidden><p class="upload-note" id="uploadStatus" style="margin-top:.4rem">Photos are resized before upload.</p></div>
+    </div>
+    <div class="gallery" id="galleryGrid"></div>
+  </div>
+</section>
+
+<section class="block" id="resources">
+  <div class="wrap">
+    <div class="head"><div><span class="eyebrow">Licensing &amp; resources</span><h2>For NYC gun owners</h2></div></div>
+    <div class="info">
+      <div><h3>NYPD licensing</h3><p class="muted" style="font-size:.94rem;margin-bottom:.7rem">All NYC handgun license applications are submitted online through the NYPD License Division portal.</p><a class="btn" href="https://licensing.nypdonline.org/app-instruction/" target="_blank" rel="noopener">NYPD licensing portal</a></div>
+      <div><h3>National organizations</h3><ul class="links">
+        <li><a href="https://home.nra.org/" target="_blank" rel="noopener">National Rifle Association</a></li>
+        <li><a href="https://www.gunowners.org/" target="_blank" rel="noopener">Gun Owners of America</a></li>
+        <li><a href="https://saf.org/" target="_blank" rel="noopener">Second Amendment Foundation</a></li>
+        <li><a href="https://www.usconcealedcarry.com" target="_blank" rel="noopener">U.S. Concealed Carry Association</a></li>
+        <li><a href="https://armedcitizensnetwork.org/" target="_blank" rel="noopener">Armed Citizens Legal Defense Network</a></li></ul></div>
+      <div><h3>New York</h3><ul class="links">
+        <li><a href="https://www.nysrpa.org/" target="_blank" rel="noopener">NYS Rifle &amp; Pistol Association</a></li>
+        <li><a href="https://www.scopeny2a.org/" target="_blank" rel="noopener">SCOPE NY</a></li>
+        <li><a href="https://nytacdefense.com/" target="_blank" rel="noopener">NY TAC Defense</a></li></ul></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <h2>Visit the range</h2>
+        <p class="muted" style="margin-top:.8rem;max-width:30em">A non-profit club organized and operated by firearms enthusiasts. Originally founded in Brooklyn, now at home in Middle Village, Queens.</p>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.2rem">
+          <a class="btn" href="https://www.google.com/maps/search/?api=1&query=64-69+Dry+Harbor+Rd+Middle+Village+NY+11379" target="_blank" rel="noopener">Directions</a>
+          <a class="btn" href="https://www.facebook.com/StuyvesantRodandGunClub/" target="_blank" rel="noopener">Facebook</a>
+        </div>
+      </div>
+      <div class="row">
+        <div><span class="k">Address</span><span class="v">64-69 Dry Harbor Rd<br>Middle Village, NY 11379</span></div>
+        <div><span class="k">Phone</span><span class="v tnum" id="phone">718-326-7350</span><button class="copy" data-copy="718-326-7350">Copy</button></div>
+      </div>
+      <div class="row">
+        <div><span class="k">General</span><span class="v">srgcnyc@gmail.com</span><button class="copy" data-copy="srgcnyc@gmail.com">Copy</button></div>
+        <div><span class="k">Training</span><span class="v">srgctrain@gmail.com</span><button class="copy" data-copy="srgctrain@gmail.com">Copy</button></div>
+      </div>
+    </div>
+    <div class="legal"><span>© Stuyvesant Rod &amp; Gun Club Inc. · Non-profit</span><span>Pistol range · Handguns only</span></div>
+  </div>
+</footer>
+
+<div id="modalRoot"></div>
+
+<script>
+(() => {
+const TZ = 'America/New_York';
+const DOW = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MONL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const CATS = {training:'Training',club:'Club',meeting:'Meeting',closure:'Closure'};
+const PLACEHOLDERS = ['Firing line after renovation','Shooting ports & target carriers','Cleaning & work area','Member lounge','Lockers','Classroom','Club entrance','Range officer station'];
+
+// Display fallback used only when the shared store is unavailable (e.g. hosted outside Claude).
+const FALLBACK = {
+  hours:{confirmed:false,note:'Hours can change for classes and events. Check the calendar before you come.',days:[{closed:true},{open:'19:00',close:'22:00'},{open:'19:00',close:'22:00'},{open:'19:00',close:'22:00'},{open:'19:00',close:'22:00'},{open:'19:00',close:'22:00'},{open:'12:00',close:'18:00'}]},
+  banner:{on:true,text:'Closed for renovations through Sunday, Sept 27. Reopening Monday, Sept 28 at 7 PM.'},
+  events:[
+    {id:'f1',title:'Closed for renovations',category:'closure',date:'2026-09-20',endDate:'2026-09-27',desc:'The club is closed while the range is renovated.'},
+    {id:'f2',title:'Reopening night',category:'club',date:'2026-09-28',start:'19:00',desc:'The range reopens after renovations.'},
+    {id:'f3',title:'18-hour NYS concealed carry class',category:'training',date:'2026-10-24',endDate:'2026-10-25',start:'09:00',desc:'$399, includes range time, firearm, ammunition and application help. Email srgctrain@gmail.com to register.'}
+  ]
+};
+
+const state = {hours:null,banner:null,events:[],photos:[],cover:null,editing:false,canEdit:false,db:null,assets:null,month:null};
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// ---------- time helpers (New York) ----------
+function nyNow(){
+  const p = Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23',weekday:'short'}).formatToParts(new Date()).map(x=>[x.type,x.value]));
+  const ymd = `${p.year}-${p.month}-${p.day}`;
+  return {ymd, mins:(+p.hour)*60+(+p.minute), dow:new Date(ymd+'T12:00:00Z').getUTCDay()};
+}
+const toMin = t => { if(!t) return null; const [h,m]=t.split(':').map(Number); return h*60+m; };
+function fmtT(t){ if(!t) return ''; let [h,m]=t.split(':').map(Number); const ap=h>=12?'PM':'AM'; h=h%12||12; return m? `${h}:${String(m).padStart(2,'0')} ${ap}` : `${h} ${ap}`; }
+function addDays(ymd,n){ const d=new Date(ymd+'T12:00:00Z'); d.setUTCDate(d.getUTCDate()+n); return d.toISOString().slice(0,10); }
+function dowOf(ymd){ return new Date(ymd+'T12:00:00Z').getUTCDay(); }
+function fmtDate(ymd,opts={weekday:'short',month:'short',day:'numeric'}){ return new Date(ymd+'T12:00:00Z').toLocaleDateString('en-US',{...opts,timeZone:'UTC'}); }
+function closureOn(ymd){ return state.events.find(e=>e.category==='closure' && e.date<=ymd && (e.endDate||e.date)>=ymd); }
+function dayHours(ymd){
+  const c = closureOn(ymd); if(c) return {closed:true,reason:c.title};
+  const d = (state.hours?.days||[])[dowOf(ymd)]; if(!d || d.closed || !d.open || !d.close) return {closed:true};
+  return {closed:false,open:d.open,close:d.close};
+}
+
+// ---------- status ----------
+function renderStatus(){
+  const n = nyNow(); const today = dayHours(n.ymd);
+  let open=false, detail='', why='';
+  if(!today.closed){ const o=toMin(today.open), c=toMin(today.close); if(n.mins>=o && n.mins<c){ open=true; detail=`Open until ${fmtT(today.close)}`; } }
+  if(!open){
+    for(let i=0;i<60;i++){
+      const ymd=addDays(n.ymd,i), h=dayHours(ymd);
+      if(h.closed) continue;
+      if(i===0 && n.mins>=toMin(h.open)) continue;
+      detail = i===0? `Opens today at ${fmtT(h.open)}` : i===1? `Opens tomorrow at ${fmtT(h.open)}` : `Opens ${fmtDate(ymd)} at ${fmtT(h.open)}`; break;
+    }
+    if(today.reason) why = today.reason;
+  }
+  $('#stState').textContent = open? 'Open now':'Closed';
+  $('#stDot').className = 'dot '+(open?'on':'off');
+  $('#stDetail').textContent = detail;
+  $('#stWhy').textContent = why;
+  $('#stToday').textContent = today.closed? 'Closed' : `${fmtT(today.open)} – ${fmtT(today.close)}`;
+}
+
+// ---------- hours ----------
+function renderHours(){
+  const n = nyNow(), days = state.hours?.days||[];
+  const order=[1,2,3,4,5,6,0];
+  $('#hoursTable').innerHTML = order.map(i=>{ const d=days[i]||{closed:true}; const shut=d.closed||!d.open;
+    return `<tr class="${i===n.dow?'is-today':''}"><td>${DOW[i]}</td><td>${shut?'<span class="closed-txt">Closed</span>':`${fmtT(d.open)} – ${fmtT(d.close)}`}</td></tr>`; }).join('');
+  const c = closureOn(n.ymd) || state.events.filter(e=>e.category==='closure' && e.date>n.ymd && e.date<=addDays(n.ymd,14)).sort((a,b)=>a.date.localeCompare(b.date))[0];
+  const ov=$('#hoursOverride');
+  if(c){ ov.hidden=false; ov.textContent = `${c.title}: ${fmtDate(c.date)}${c.endDate&&c.endDate!==c.date?' – '+fmtDate(c.endDate):''}`; } else ov.hidden=true;
+  $('#hoursNote').textContent = state.hours?.note||'';
+  $('#hoursWarn').hidden = !!state.hours?.confirmed;
+  // form
+  $('#hoursForm').innerHTML = order.map(i=>{ const d=days[i]||{closed:true};
+    return `<div class="hrow"><span>${DOW[i].slice(0,3)}</span><label style="display:flex;gap:.3rem;align-items:center;font-size:.8rem"><input type="checkbox" id="hc${i}" ${d.closed?'checked':''}> Closed</label><input type="time" id="ho${i}" value="${esc(d.open||'19:00')}" ${d.closed?'disabled':''} aria-label="${DOW[i]} opens"><input type="time" id="hx${i}" value="${esc(d.close||'22:00')}" ${d.closed?'disabled':''} aria-label="${DOW[i]} closes"></div>`; }).join('');
+  order.forEach(i=>$('#hc'+i).addEventListener('change',e=>{ $('#ho'+i).disabled=$('#hx'+i).disabled=e.target.checked; }));
+  $('#hoursNoteIn').value = state.hours?.note||'';
+  $('#hoursConfirmed').checked = !!state.hours?.confirmed;
+}
+
+// ---------- banner ----------
+function renderBanner(){
+  const b=state.banner; $('#banner').hidden = !(b&&b.on&&b.text); $('#bannerText').textContent=b?.text||'';
+  $('#bannerIn').value=b?.text||''; $('#bannerOn').checked=!!b?.on;
+}
+
+// ---------- events ----------
+function evWhen(e){
+  let s = fmtDate(e.date); if(e.endDate && e.endDate!==e.date) s += ' – '+fmtDate(e.endDate);
+  if(e.start) s += ' · '+fmtT(e.start)+(e.end?' – '+fmtT(e.end):'');
+  return s;
+}
+function evRow(e){
+  const [y,m,d]=e.date.split('-');
+  return `<div class="ev"><div class="date"><span class="m">${MON[+m-1]}</span><span class="d">${+d}</span></div>
+  <div><div class="t"><span class="chip cat-${esc(e.category)}">${esc(CATS[e.category]||e.category)}</span>${esc(e.title)}</div><div class="meta tnum">${esc(evWhen(e))}</div>${e.desc?`<div class="desc">${esc(e.desc)}</div>`:''}</div>
+  <div class="acts admin-flex">${state.canEdit?`<button class="btn sm" data-edit="${esc(e.id)}">Edit</button>`:''}</div></div>`;
+}
+function sortedEvents(){ return [...state.events].sort((a,b)=>a.date.localeCompare(b.date)||(a.start||'').localeCompare(b.start||'')); }
+function renderUpcoming(){
+  const t=nyNow().ymd; const up=sortedEvents().filter(e=>(e.endDate||e.date)>=t).slice(0,4);
+  $('#upcoming').innerHTML = up.length? up.map(evRow).join('') : '<p class="empty">No upcoming events posted yet.</p>';
+  const ccw = sortedEvents().find(e=>e.category==='training' && /carry|ccw/i.test(e.title) && (e.endDate||e.date)>=t);
+  $('#ccwNext').textContent = ccw? evWhen(ccw) : 'Email for the next date';
+}
+function renderCal(){
+  const [Y,M]=state.month; const first=new Date(Date.UTC(Y,M,1)); const startDow=first.getUTCDay();
+  const start=addDays(first.toISOString().slice(0,10),-startDow); const today=nyNow().ymd;
+  $('#monthLbl').textContent = `${MONL[M]} ${Y}`;
+  let html = DOW.map(d=>`<div class="dow">${d.slice(0,3)}</div>`).join('');
+  const weeks = Math.ceil((startDow+new Date(Date.UTC(Y,M+1,0)).getUTCDate())/7);
+  for(let i=0;i<weeks*7;i++){
+    const ymd=addDays(start,i); const inM = +ymd.slice(5,7)-1===M;
+    const evs = sortedEvents().filter(e=>e.date<=ymd && (e.endDate||e.date)>=ymd);
+    const shut = !!closureOn(ymd);
+    html += `<div class="day${inM?'':' out'}${ymd===today?' today':''}${shut?' shut':''}"><span class="n">${+ymd.slice(8)}</span>${evs.map(e=>`<button class="e cat-${esc(e.category)}" data-show="${esc(e.id)}" title="${esc(e.title)}"><span>${e.start&&e.date===ymd?fmtT(e.start)+' ':''}${esc(e.title)}</span></button>`).join('')}</div>`;
+  }
+  $('#cal').innerHTML = html;
+  const mk = `${Y}-${String(M+1).padStart(2,'0')}`;
+  const inMonth = sortedEvents().filter(e=>e.date.slice(0,7)<=mk && (e.endDate||e.date).slice(0,7)>=mk);
+  $('#agendaTitle').textContent = `${MONL[M]} events`;
+  $('#agenda').innerHTML = inMonth.length? inMonth.map(evRow).join('') : `<p class="empty">Nothing on the calendar for ${MONL[M]}.</p>`;
+}
+
+// ---------- gallery ----------
+function photoUrl(p){ return p.url || ('/_blob/'+p.assetId); }
+function renderGallery(){
+  const g=$('#galleryGrid'); const ps=[...state.photos].sort((a,b)=>(a.order||0)-(b.order||0));
+  if(!ps.length){ g.innerHTML = PLACEHOLDERS.map(t=>`<div class="ph placeholder"><span>Photo coming · ${esc(t)}</span></div>`).join(''); }
+  else g.innerHTML = ps.map(p=>`<figure class="ph" style="margin:0"><img src="${esc(photoUrl(p))}" alt="${esc(p.caption||'Club photo')}" loading="lazy">${state.cover===p.id?'<span class="cover-tag">Cover</span>':''}${p.caption?`<figcaption class="cap">${esc(p.caption)}</figcaption>`:''}
+    <div class="tools admin-flex"><button class="btn sm" data-cap="${esc(p.id)}">Caption</button><button class="btn sm" data-cover="${esc(p.id)}">Set cover</button><button class="btn sm" data-delp="${esc(p.id)}">Remove</button></div></figure>`).join('');
+  const cov = ps.find(p=>p.id===state.cover);
+  const hc=$('#heroCover'); if(cov){ hc.hidden=false; hc.style.backgroundImage=`url("${photoUrl(cov)}")`; $('#heroRings').style.display='none'; } else { hc.hidden=true; $('#heroRings').style.display=''; }
+}
+
+function renderAll(){ renderStatus(); renderHours(); renderBanner(); renderUpcoming(); renderCal(); renderGallery(); }
+
+// ---------- UI helpers ----------
+function toast(msg){ const t=document.createElement('div'); t.className='toast'; t.textContent=msg; t.setAttribute('role','status'); document.body.appendChild(t); setTimeout(()=>t.remove(),2600); }
+function modal(html){ const r=$('#modalRoot'); r.innerHTML=`<div class="modal-bg"><div class="modal" role="dialog" aria-modal="true">${html}</div></div>`; r.querySelector('.modal-bg').addEventListener('click',e=>{ if(e.target.classList.contains('modal-bg')) closeModal(); }); const f=r.querySelector('input,textarea,button'); f&&f.focus(); return r.querySelector('.modal'); }
+function closeModal(){ $('#modalRoot').innerHTML=''; }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+function writeErr(e){ if(e?.code==='invalid_argument') return 'You do not have permission to edit this site.'; if(e?.code==='quota_exceeded') return 'Storage is full. Remove some old events or photos, then try again.'; return 'Could not save. Check your connection and try again.'; }
+
+function showEvent(id){
+  const e=state.events.find(x=>x.id===id); if(!e) return;
+  const m=modal(`<span class="chip cat-${esc(e.category)}" style="align-self:flex-start">${esc(CATS[e.category])}</span><h3>${esc(e.title)}</h3><p class="muted tnum">${esc(evWhen(e))}</p>${e.desc?`<p>${esc(e.desc)}</p>`:''}<div class="acts">${state.editing?`<button class="btn" id="mEdit">Edit</button>`:''}<button class="btn primary" id="mClose">Close</button></div>`);
+  m.querySelector('#mClose').onclick=closeModal; const ed=m.querySelector('#mEdit'); if(ed) ed.onclick=()=>editEvent(id);
+}
+function editEvent(id){
+  const e = id? state.events.find(x=>x.id===id) : {title:'',category:'club',date:nyNow().ymd,endDate:'',start:'',end:'',desc:''};
+  const m=modal(`<h3>${id?'Edit event':'Add event'}</h3>
+   <label class="field">Title<input id="fTitle" value="${esc(e.title)}" required></label>
+   <div class="form-grid"><label class="field">Type<select id="fCat">${Object.entries(CATS).map(([k,v])=>`<option value="${k}" ${e.category===k?'selected':''}>${v}</option>`).join('')}</select></label>
+   <label class="field">Date<input type="date" id="fDate" value="${esc(e.date)}"></label><label class="field">End date (optional)<input type="date" id="fEnd" value="${esc(e.endDate||'')}"></label></div>
+   <div class="form-grid"><label class="field">Start time (optional)<input type="time" id="fStart" value="${esc(e.start||'')}"></label><label class="field">End time (optional)<input type="time" id="fEndT" value="${esc(e.end||'')}"></label></div>
+   <label class="field">Details<textarea id="fDesc">${esc(e.desc||'')}</textarea></label>
+   <p class="upload-note">Closure events mark the range closed on those dates.</p>
+   <p class="closed-txt" id="fErr" style="font-size:.88rem"></p>
+   <div class="acts">${id?'<button class="btn danger" id="fDel" style="margin-right:auto">Delete</button>':''}<button class="btn" id="fCancel">Cancel</button><button class="btn primary" id="fSave">${id?'Save changes':'Add to calendar'}</button></div>`);
+  m.querySelector('#fCancel').onclick=closeModal;
+  m.querySelector('#fSave').onclick=async()=>{
+    const body={title:$('#fTitle').value.trim(),category:$('#fCat').value,date:$('#fDate').value,endDate:$('#fEnd').value||'',start:$('#fStart').value||'',end:$('#fEndT').value||'',desc:$('#fDesc').value.trim()};
+    if(!body.title||!body.date){ $('#fErr').textContent='Add a title and a date.'; return; }
+    if(body.endDate && body.endDate<body.date){ $('#fErr').textContent='The end date is before the start date.'; return; }
+    try{ const col=state.db.collection('events'); await (id? col.doc(id).set(body) : col.add(body)); closeModal(); toast(id?'Event updated':'Event added'); }catch(err){ $('#fErr').textContent=writeErr(err); }
+  };
+  const del=m.querySelector('#fDel');
+  if(del) del.onclick=async()=>{
+    if(del.dataset.armed!=='1'){ del.dataset.armed='1'; del.textContent='Tap again to delete'; return; }
+    try{ await state.db.collection('events').doc(id).delete(); closeModal(); toast('Event deleted'); }catch(err){ $('#fErr').textContent=writeErr(err); }
+  };
+}
+
+// resize an image file to max 2000px JPEG
+function resize(file,max=2000){ return new Promise((res,rej)=>{ const img=new Image(); const u=URL.createObjectURL(file); img.onload=()=>{ const s=Math.min(1,max/Math.max(img.width,img.height)); const c=document.createElement('canvas'); c.width=Math.round(img.width*s); c.height=Math.round(img.height*s); c.getContext('2d').drawImage(img,0,0,c.width,c.height); URL.revokeObjectURL(u); c.toBlob(b=>b?res(b):rej(new Error('encode')),'image/jpeg',.85); }; img.onerror=()=>{URL.revokeObjectURL(u); rej(new Error('read'));}; img.src=u; }); }
+
+// ---------- wiring ----------
+$('#menuBtn').onclick=()=>{ const n=$('#nav'); const o=n.classList.toggle('open'); $('#menuBtn').setAttribute('aria-expanded',o); };
+$('#nav').addEventListener('click',e=>{ if(e.target.tagName==='A'){ $('#nav').classList.remove('open'); $('#menuBtn').setAttribute('aria-expanded','false'); }});
+$('#prevM').onclick=()=>{ let [y,m]=state.month; m--; if(m<0){m=11;y--;} state.month=[y,m]; renderCal(); };
+$('#nextM').onclick=()=>{ let [y,m]=state.month; m++; if(m>11){m=0;y++;} state.month=[y,m]; renderCal(); };
+$('#todayM').onclick=()=>{ const t=nyNow().ymd; state.month=[+t.slice(0,4),+t.slice(5,7)-1]; renderCal(); };
+document.addEventListener('click',async e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  if(b.dataset.show) showEvent(b.dataset.show);
+  if(b.dataset.edit) editEvent(b.dataset.edit);
+  if(b.dataset.copy){ try{ await navigator.clipboard.writeText(b.dataset.copy); b.textContent='Copied'; setTimeout(()=>b.textContent='Copy',1500);}catch{ const s=b.previousElementSibling; const r=document.createRange(); r.selectNodeContents(s); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r);} }
+  if(b.dataset.cover){ try{ await state.db.doc('site/cover').set({photoId: state.cover===b.dataset.cover? '' : b.dataset.cover}); toast('Cover photo updated'); }catch(err){ toast(writeErr(err)); } }
+  if(b.dataset.cap){ const p=state.photos.find(x=>x.id===b.dataset.cap); const m=modal(`<h3>Photo caption</h3><label class="field">Caption<input id="cIn" value="${esc(p.caption||'')}"></label><div class="acts"><button class="btn" id="cX">Cancel</button><button class="btn primary" id="cS">Save</button></div>`); m.querySelector('#cX').onclick=closeModal; m.querySelector('#cS').onclick=async()=>{ try{ await state.db.collection('photos').doc(p.id).update({caption:$('#cIn').value.trim()}); closeModal(); toast('Caption saved'); }catch(err){ toast(writeErr(err)); } }; }
+  if(b.dataset.delp){ if(b.dataset.armed!=='1'){ b.dataset.armed='1'; b.textContent='Tap to confirm'; return; } const p=state.photos.find(x=>x.id===b.dataset.delp); try{ await state.db.collection('photos').doc(p.id).delete(); if(p.assetId && state.assets) await state.assets.delete(p.assetId).catch(()=>{}); if(state.cover===p.id) await state.db.doc('site/cover').set({photoId:''}); toast('Photo removed'); }catch(err){ toast(writeErr(err)); } }
+});
+$('#adminToggle').onclick=()=>{ state.editing=!state.editing; document.body.classList.toggle('editing',state.editing); $('#adminToggle').setAttribute('aria-pressed',state.editing); $('#adminToggle').textContent=state.editing?'Done editing':'Manage site'; };
+$('#addEvent').onclick=()=>editEvent(null);
+$('#saveHours').onclick=async()=>{
+  const days=[0,1,2,3,4,5,6].map(i=>$('#hc'+i).checked?{closed:true}:{closed:false,open:$('#ho'+i).value,close:$('#hx'+i).value});
+  const bad=days.findIndex(d=>!d.closed && (!d.open||!d.close||d.close<=d.open));
+  if(bad>=0){ toast(`${DOW[bad]}: closing time must be after opening time.`); return; }
+  try{ await state.db.doc('site/hours').set({days,note:$('#hoursNoteIn').value.trim(),confirmed:$('#hoursConfirmed').checked}); toast('Hours saved'); }catch(err){ toast(writeErr(err)); }
+};
+$('#saveBanner').onclick=async()=>{ try{ await state.db.doc('site/banner').set({text:$('#bannerIn').value.trim(),on:$('#bannerOn').checked}); toast('Banner saved'); }catch(err){ toast(writeErr(err)); } };
+$('#photoIn').onchange=async e=>{
+  const files=[...e.target.files]; e.target.value=''; if(!files.length) return;
+  const st=$('#uploadStatus'); let done=0, failed=0; const base=Date.now();
+  for(const f of files){
+    st.textContent=`Uploading ${done+failed+1} of ${files.length}…`;
+    try{ const blob=await resize(f); const a=await state.assets.upload(blob); await state.db.collection('photos').add({assetId:a.id,caption:'',order:base+done}); done++; }catch(err){ failed++; }
+  }
+  st.textContent = failed? `${done} uploaded, ${failed} failed. Try the failed ones again.` : `${done} photo${done===1?'':'s'} added.`;
+};
+
+// ---------- boot ----------
+const t0=nyNow().ymd; state.month=[+t0.slice(0,4),+t0.slice(5,7)-1];
+state.hours=FALLBACK.hours; state.banner=FALLBACK.banner; state.events=FALLBACK.events;
+renderAll();
+setInterval(renderStatus,60000);
+
+(async()=>{
+  try{
+    const r = await fetch('data.json',{cache:'no-store'}); if(!r.ok) return;
+    const d = await r.json();
+    if(d.hours) state.hours=d.hours;
+    state.banner = d.banner||null;
+    if(Array.isArray(d.events)) state.events=d.events.map((e,i)=>({id:'e'+i,category:'club',...e}));
+    if(Array.isArray(d.photos)) state.photos=d.photos.map((p,i)=>({id:'p'+i,url:p.src,caption:p.caption||'',order:i}));
+    const c = state.photos.find(p=>p.url===d.cover); state.cover = c? c.id : null;
+    renderAll();
+  }catch(e){}
+})();
+})();
+</script>
+
+</body>
+</html>

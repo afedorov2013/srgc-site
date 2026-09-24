@@ -1,0 +1,45 @@
+{
+  "banner": {
+    "on": true,
+    "text": "Closed for renovations through Sunday, Sept 27. Reopening Monday, Sept 28 at 7 PM."
+  },
+  "hours": {
+    "confirmed": false,
+    "note": "Hours can change for classes and events. Check the calendar before you come.",
+    "days": [
+      { "day": "Sunday",    "closed": true },
+      { "day": "Monday",    "closed": false, "open": "19:00", "close": "22:00" },
+      { "day": "Tuesday",   "closed": false, "open": "19:00", "close": "22:00" },
+      { "day": "Wednesday", "closed": false, "open": "19:00", "close": "22:00" },
+      { "day": "Thursday",  "closed": false, "open": "19:00", "close": "22:00" },
+      { "day": "Friday",    "closed": false, "open": "19:00", "close": "22:00" },
+      { "day": "Saturday",  "closed": false, "open": "12:00", "close": "18:00" }
+    ]
+  },
+  "events": [
+    {
+      "title": "Closed for renovations",
+      "category": "closure",
+      "date": "2026-09-20",
+      "endDate": "2026-09-27",
+      "desc": "The club is closed while the range is renovated."
+    },
+    {
+      "title": "Reopening night",
+      "category": "club",
+      "date": "2026-09-28",
+      "start": "19:00",
+      "desc": "The range reopens after renovations."
+    },
+    {
+      "title": "18-hour NYS concealed carry class",
+      "category": "training",
+      "date": "2026-10-24",
+      "endDate": "2026-10-25",
+      "start": "09:00",
+      "desc": "$399, includes range time, firearm, ammunition and application help. Email srgctrain@gmail.com to register."
+    }
+  ],
+  "photos": [],
+  "cover": ""
+}
