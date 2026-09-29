@@ -8,9 +8,7 @@
     "binding": "ASSETS",
     "run_worker_first": ["/api/*", "/photos/*"]
   },
-  // Site content (hours, events, banner, officers). Created automatically on first deploy.
+  // Site content (hours, events, banner, photos, officers). Created automatically on first deploy.
   "d1_databases": [{ "binding": "DB", "database_name": "srgc-db" }],
-  // Photo storage. Created automatically on first deploy.
-  "r2_buckets": [{ "binding": "PHOTOS", "bucket_name": "srgc-photos" }],
   "observability": { "enabled": true }
 }

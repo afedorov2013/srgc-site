@@ -137,7 +137,7 @@ pre.preview{white-space:pre-wrap;background:var(--sunk);border-radius:6px;paddin
     <div class="card">
       <div class="btns" style="justify-content:space-between"><h3>Photos</h3><label class="btn primary" for="pIn" style="cursor:pointer">Add photos</label></div>
       <input type="file" id="pIn" accept="image/*" multiple hidden>
-      <p class="help" id="pStatus">Photos are resized to 2000 px before upload. Choose one as the cover to show it behind the club name at the top of the site.</p>
+      <p class="help" id="pStatus">Photos are resized before upload. Choose one as the cover to show it behind the club name at the top of the site.</p>
       <div class="photos" id="pGrid"></div>
     </div>
   </div>
@@ -287,7 +287,7 @@ $('#pGrid').addEventListener('click',async e=>{
     if(d){ if(d.dataset.armed!=='1'){d.dataset.armed='1';d.textContent='Tap to confirm';return;} await api('photos/'+d.dataset.del,{method:'DELETE'}); S=await api('content'); renderPhotos(); toast('Photo deleted'); }
   }catch(err){ toast(err.message); }
 });
-function resize(file,max=2000){return new Promise((res,rej)=>{const img=new Image();const u=URL.createObjectURL(file);img.onload=()=>{const s=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(b=>b?res(b):rej(new Error('Could not read that image.')),'image/jpeg',.85);};img.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('Could not read that image.'));};img.src=u;});}
+function resize(file,max=1600){return new Promise((res,rej)=>{const img=new Image();const u=URL.createObjectURL(file);img.onload=()=>{const s=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(b=>b?res(b):rej(new Error('Could not read that image.')),'image/jpeg',.8);};img.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('Could not read that image.'));};img.src=u;});}
 $('#pIn').onchange=async e=>{
   const files=[...e.target.files]; e.target.value=''; if(!files.length) return;
   let ok=0,bad=0; for(const f of files){ $('#pStatus').textContent=`Uploading ${ok+bad+1} of ${files.length}…`; try{ const b=await resize(f); await api('photos',{method:'POST',headers:{'Content-Type':'image/jpeg'},body:b}); ok++; }catch(err){ bad++; } }

@@ -5,8 +5,7 @@ The club website runs entirely in the club's **Cloudflare** account:
 | Part | Where it lives in Cloudflare |
 |---|---|
 | Web pages (`index.html`, `admin.html`) and the site code (`worker.js`) | Workers & Pages → **srgc** |
-| Hours, events, notice banner, officer logins | Storage & Databases → D1 → **srgc-db** |
-| Photos | R2 → **srgc-photos** |
+| Hours, events, notice banner, photos, officer logins | Storage & Databases → D1 → **srgc-db** |
 
 If GitHub disappears, the site keeps running. Day-to-day changes never touch GitHub.
 

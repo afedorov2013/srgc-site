@@ -1,6 +1,6 @@
 // Stuyvesant Rod & Gun Club — site worker
 // Public API:  GET /api/content          -> hours, banner, events, photos (JSON)
-//              GET /photos/<key>          -> photo from R2
+//              GET /photos/<key>          -> photo (stored in D1)
 // Admin API:   /api/admin/*  (officer login required)
 // Everything else is served from /public (static assets).
 
@@ -32,7 +32,7 @@ async function init(env) {
   await env.DB.batch([
     env.DB.prepare(`CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT NOT NULL)`),
     env.DB.prepare(`CREATE TABLE IF NOT EXISTS events (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, category TEXT NOT NULL, date TEXT NOT NULL, end_date TEXT, start TEXT, "end" TEXT, descr TEXT, updated_at TEXT)`),
-    env.DB.prepare(`CREATE TABLE IF NOT EXISTS photos (id INTEGER PRIMARY KEY AUTOINCREMENT, r2key TEXT NOT NULL, caption TEXT, sort INTEGER DEFAULT 0, created_at TEXT)`),
+    env.DB.prepare(`CREATE TABLE IF NOT EXISTS photos (id INTEGER PRIMARY KEY AUTOINCREMENT, r2key TEXT NOT NULL, caption TEXT, sort INTEGER DEFAULT 0, created_at TEXT, ctype TEXT, data BLOB)`),
     env.DB.prepare(`CREATE TABLE IF NOT EXISTS officers (email TEXT PRIMARY KEY, name TEXT, salt TEXT NOT NULL, hash TEXT NOT NULL, created_at TEXT, fails INTEGER DEFAULT 0, locked_until INTEGER DEFAULT 0)`),
     env.DB.prepare(`CREATE TABLE IF NOT EXISTS sessions (token TEXT PRIMARY KEY, email TEXT NOT NULL, expires INTEGER NOT NULL)`),
   ]);
@@ -61,7 +61,7 @@ async function getS(env, k, dflt) { const r = await env.DB.prepare(`SELECT value
 async function content(env) {
   const [hours, banner, cover] = await Promise.all([getS(env, 'hours', null), getS(env, 'banner', null), getS(env, 'cover', {})]);
   const ev = (await env.DB.prepare(`SELECT * FROM events ORDER BY date, start`).all()).results;
-  const ph = (await env.DB.prepare(`SELECT * FROM photos ORDER BY sort, id`).all()).results;
+  const ph = (await env.DB.prepare(`SELECT id, r2key, caption FROM photos ORDER BY sort, id`).all()).results;
   const photos = ph.map(r => ({ id: r.id, src: '/photos/' + r.r2key, caption: r.caption || '' }));
   const c = photos.find(x => x.id === cover.photoId);
   return {
@@ -75,10 +75,10 @@ const evOut = r => ({ id: r.id, title: r.title, category: r.category, date: r.da
 
 async function photo(env, key) {
   if (!/^[a-z0-9-]+\.(jpg|jpeg|png|webp)$/i.test(key)) return new Response('Not found', { status: 404 });
-  const obj = await env.PHOTOS.get(key);
-  if (!obj) return new Response('Not found', { status: 404 });
-  const h = new Headers(); obj.writeHttpMetadata(h); h.set('etag', obj.httpEtag); h.set('Cache-Control', 'public, max-age=31536000, immutable');
-  return new Response(obj.body, { headers: h });
+  const r = await env.DB.prepare(`SELECT ctype, data FROM photos WHERE r2key=?`).bind(key).first();
+  if (!r || !r.data) return new Response('Not found', { status: 404 });
+  const bytes = r.data instanceof ArrayBuffer ? new Uint8Array(r.data) : new Uint8Array(r.data);
+  return new Response(bytes, { headers: { 'Content-Type': r.ctype || 'image/jpeg', 'Cache-Control': 'public, max-age=31536000, immutable' } });
 }
 
 // ---------- admin ----------
@@ -169,14 +169,12 @@ async function admin(req, env, route) {
     const type = (req.headers.get('Content-Type') || '').split(';')[0];
     const ext = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' }[type];
     if (!ext) return json({ error: 'Photos must be JPEG, PNG or WebP.' }, 400);
-    const len = +req.headers.get('Content-Length') || 0;
-    if (len > 15 * 1024 * 1024) return json({ error: 'That photo is over 15 MB.' }, 400);
     const key = crypto.randomUUID() + '.' + ext;
     const buf = await req.arrayBuffer();
-    if (buf.byteLength > 15 * 1024 * 1024) return json({ error: 'That photo is over 15 MB.' }, 400);
-    await env.PHOTOS.put(key, buf, { httpMetadata: { contentType: type } });
+    // Photos are stored in the database itself (resized in the browser first), so the site needs no separate file storage.
+    if (buf.byteLength > 1900000) return json({ error: 'That photo is still too large after resizing. Try a smaller image.' }, 400);
     const cap = str(new URL(req.url).searchParams.get('caption'), 200);
-    await env.DB.prepare(`INSERT INTO photos (r2key,caption,sort,created_at) VALUES (?,?,?,?)`).bind(key, cap, Math.floor(Date.now() / 1000), new Date().toISOString()).run();
+    await env.DB.prepare(`INSERT INTO photos (r2key,caption,sort,created_at,ctype,data) VALUES (?,?,?,?,?,?)`).bind(key, cap, Math.floor(Date.now() / 1000), new Date().toISOString(), type, buf).run();
     return json({ ok: true });
   }
   if (route.startsWith('photos/') && m === 'PUT') {
@@ -187,7 +185,7 @@ async function admin(req, env, route) {
   if (route.startsWith('photos/') && m === 'DELETE') {
     const id = int(route.slice(7));
     const r = await env.DB.prepare(`SELECT r2key FROM photos WHERE id=?`).bind(id).first();
-    if (r) { await env.PHOTOS.delete(r.r2key); await env.DB.prepare(`DELETE FROM photos WHERE id=?`).bind(id).run(); }
+    if (r) await env.DB.prepare(`DELETE FROM photos WHERE id=?`).bind(id).run();
     const cov = await getS(env, 'cover', {}); if (cov.photoId === id) await setS(env, 'cover', { photoId: null }).run();
     return json({ ok: true });
   }
