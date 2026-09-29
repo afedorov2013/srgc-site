@@ -1,19 +1,52 @@
 {
   "banner": {
     "on": true,
-    "text": "Closed for renovations through Sunday, Sept 27. Reopening Monday, Sept 28 at 7 PM."
+    "text": "Now open after renovations. Come see the upgraded range!"
   },
   "hours": {
     "confirmed": false,
     "note": "Hours can change for classes and events. Check the calendar before you come.",
     "days": [
-      { "day": "Sunday",    "closed": true },
-      { "day": "Monday",    "closed": false, "open": "19:00", "close": "22:00" },
-      { "day": "Tuesday",   "closed": false, "open": "19:00", "close": "22:00" },
-      { "day": "Wednesday", "closed": false, "open": "19:00", "close": "22:00" },
-      { "day": "Thursday",  "closed": false, "open": "19:00", "close": "22:00" },
-      { "day": "Friday",    "closed": false, "open": "19:00", "close": "22:00" },
-      { "day": "Saturday",  "closed": false, "open": "12:00", "close": "18:00" }
+      {
+        "day": "Sunday",
+        "closed": true
+      },
+      {
+        "day": "Monday",
+        "closed": false,
+        "open": "19:00",
+        "close": "22:00"
+      },
+      {
+        "day": "Tuesday",
+        "closed": false,
+        "open": "19:00",
+        "close": "22:00"
+      },
+      {
+        "day": "Wednesday",
+        "closed": false,
+        "open": "19:00",
+        "close": "22:00"
+      },
+      {
+        "day": "Thursday",
+        "closed": false,
+        "open": "19:00",
+        "close": "22:00"
+      },
+      {
+        "day": "Friday",
+        "closed": false,
+        "open": "19:00",
+        "close": "22:00"
+      },
+      {
+        "day": "Saturday",
+        "closed": false,
+        "open": "12:00",
+        "close": "18:00"
+      }
     ]
   },
   "events": [

@@ -1,38 +1,36 @@
-# Stuyvesant Rod & Gun Club — website preview
+# Stuyvesant Rod & Gun Club website
 
-A single-page site. Everything that changes week to week lives in **`data.json`**, so updates never touch the page code.
+The club website runs entirely in the club's **Cloudflare** account:
 
-## How to update (from any browser, including a phone)
-1. Open `data.json` in this repository and tap the pencil icon (Edit).
-2. Make the change, then tap **Commit changes**. The live site updates in about a minute.
+| Part | Where it lives in Cloudflare |
+|---|---|
+| Web pages (`index.html`, `admin.html`) and the site code (`worker.js`) | Workers & Pages → **srgc** |
+| Hours, events, notice banner, officer logins | Storage & Databases → D1 → **srgc-db** |
+| Photos | R2 → **srgc-photos** |
 
-### Hours
-Under `"hours"` → `"days"`, each day has `"closed": true`, or `"closed": false` with 24-hour times:
-`{ "day": "Monday", "closed": false, "open": "19:00", "close": "22:00" }`
-Keep the days in order Sunday → Saturday. Set `"confirmed": true` once they're final.
+If GitHub disappears, the site keeps running. Day-to-day changes never touch GitHub.
 
-### Calendar events
-Add an entry to `"events"`:
-```json
-{ "title": "General membership meeting", "category": "meeting", "date": "2026-11-10", "start": "19:30", "desc": "All members welcome." }
-```
-- `category`: `training`, `club`, `meeting` or `closure`
-- `date` / `endDate` are `YYYY-MM-DD`; `endDate`, `start`, `end` and `desc` are optional
-- A **closure** event automatically shows the range as closed on those dates.
-- Separate entries with commas. No comma after the last one.
+## Day-to-day: the Site Manager
+Go to **`/admin`** on the website (for example `https://srgc.afedorov2013.workers.dev/admin`) and sign in.
 
-### Banner notice
-`"banner": { "on": true, "text": "..." }` — set `"on": false` to hide it.
+- **Hours & notice**: weekly hours, the note under them, and the banner across the top of the site.
+- **Calendar**: add, edit or delete events. A **Closure** event marks the range closed on those dates.
+- **Photos**: upload, caption, choose the cover photo, delete.
+- **Notify members**: builds an email from the current schedule, then opens Gmail addressed to the members' Google Group. Check it and press Send.
+- **Officers**: add officers, reset passwords, remove officers, change your own password.
 
-### Photos
-1. Upload images into the `photos/` folder (Add file → Upload files).
-2. List them in `data.json`:
-```json
-"photos": [
-  { "src": "photos/firing-line.jpg", "caption": "The renovated firing line" }
-],
-"cover": "photos/firing-line.jpg"
-```
-`cover` (optional) becomes the big image at the top of the page.
+Changes are live as soon as you save.
 
-Tip: if the page stops updating after an edit, the JSON probably has a typo (a missing comma or quote). Paste it into jsonlint.com to find it.
+## If everyone is locked out
+1. Sign in to Cloudflare → Workers & Pages → **srgc** → Settings → Variables and Secrets.
+2. Look up or change the secret **SETUP_KEY** (you can "Rotate"/edit it to a new value).
+3. Go to `/admin`, choose **Use setup key**, and create or reset an officer with that key.
+
+## First-time setup (done once)
+1. In Cloudflare: Workers & Pages → **srgc** → Settings → Variables and Secrets → **Add** → type *Secret*, name `SETUP_KEY`, value = a long random phrase. Store it with the club's records.
+2. Open `/admin` → enter the setup key and create the first officer.
+3. Add the other officers from the **Officers** tab.
+
+## Changing the site's design or code (rare)
+The code is the files in this folder. To publish a change without GitHub: Workers & Pages → **srgc** → upload a new version, or run `npx wrangler deploy` from this folder while signed in to the club's Cloudflare account.
+`data.json` is only used once, to fill the database the very first time the site runs. After that, edit everything in `/admin`.

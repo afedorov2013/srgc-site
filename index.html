@@ -747,11 +747,13 @@ setInterval(renderStatus,60000);
 
 (async()=>{
   try{
-    const r = await fetch('data.json',{cache:'no-store'}); if(!r.ok) return;
+    let r = await fetch('/api/content',{cache:'no-store'}).catch(()=>null);
+    if(!r || !r.ok) r = await fetch('data.json',{cache:'no-store'});
+    if(!r.ok) return;
     const d = await r.json();
     if(d.hours) state.hours=d.hours;
     state.banner = d.banner||null;
-    if(Array.isArray(d.events)) state.events=d.events.map((e,i)=>({id:'e'+i,category:'club',...e}));
+    if(Array.isArray(d.events)) state.events=d.events.map((e,i)=>({category:'club',...e,id:'e'+(e.id??i)}));
     if(Array.isArray(d.photos)) state.photos=d.photos.map((p,i)=>({id:'p'+i,url:p.src,caption:p.caption||'',order:i}));
     const c = state.photos.find(p=>p.url===d.cover); state.cover = c? c.id : null;
     renderAll();

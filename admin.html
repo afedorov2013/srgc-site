@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>SRGC Site Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#F3F4F2;--surface:#fff;--sunk:#E9ECEA;--ink:#151B22;--muted:#56616C;--line:#D5DADC;--steel:#18222D;--on-steel:#F1EEE7;--brass:#8A5F1E;--brass-bright:#C8923F;--brass-soft:#F1E6D1;--ok:#23704A;--ok-soft:#DCEFE3;--bad:#A5261F;--bad-soft:#F6DEDC;
+--display:"Barlow Condensed","Arial Narrow",sans-serif;--body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root{color-scheme:dark;--bg:#0F1419;--surface:#161D25;--sunk:#1C252F;--ink:#E7EAEC;--muted:#9AA4AE;--line:#2A343F;--steel:#0A0F14;--brass:#D6A75C;--brass-soft:#33291A;--ok:#62C98E;--ok-soft:#15301F;--bad:#F07A70;--bad-soft:#3A1917}}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--body)}
+header{background:var(--steel);color:var(--on-steel);padding:calc(12px + env(safe-area-inset-top,0px)) 16px 12px}
+header .in{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+header b{font-family:var(--display);font-size:1.4rem;text-transform:uppercase;letter-spacing:.02em;margin-right:auto}
+header a,header button{color:var(--on-steel)}
+main{max-width:980px;margin:0 auto;padding:20px 16px 60px}
+h1,h2,h3{font-family:var(--display);text-transform:uppercase;line-height:1.05;margin:0}
+h2{font-size:1.7rem}h3{font-size:1.25rem}
+.tabs{display:flex;gap:.3rem;overflow-x:auto;margin:0 0 1.2rem;border-bottom:1px solid var(--line)}
+.tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:.6rem .8rem;font:600 1.05rem var(--display);text-transform:uppercase;letter-spacing:.04em;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--brass-bright)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.2rem;display:flex;flex-direction:column;gap:.9rem;margin-bottom:1rem}
+.help{color:var(--muted);font-size:.9rem;margin:0}
+label.f{display:flex;flex-direction:column;gap:.25rem;font-size:.85rem;font-weight:600}
+input,textarea,select{font:inherit;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:.55rem .65rem;width:100%;font-weight:400}
+textarea{min-height:90px;resize:vertical}
+input[type=checkbox]{width:auto}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.7rem}
+.chk{display:flex;gap:.45rem;align-items:center;font-size:.92rem}
+.btns{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:.4em;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:.55em 1em;border-radius:6px;font:600 .92rem var(--body);cursor:pointer;text-decoration:none}
+.btn.primary{background:var(--brass-bright);border-color:var(--brass-bright);color:#16110A}
+.btn.danger{color:var(--bad)}
+.btn.sm{font-size:.8rem;padding:.35em .7em}
+.btn:disabled{opacity:.5;cursor:default}
+:focus-visible{outline:2px solid var(--brass-bright);outline-offset:2px}
+.hrow{display:grid;grid-template-columns:6.5rem 6rem 1fr 1fr;gap:.5rem;align-items:center;padding:.35rem 0;border-bottom:1px solid var(--line)}
+.hrow:last-child{border-bottom:0}
+.hrow input[type=time]{min-width:0}
+@media (max-width:560px){.hrow{grid-template-columns:1fr 1fr;row-gap:.35rem}.hrow .chk{justify-self:end}}
+.list{display:flex;flex-direction:column}
+.item{display:grid;grid-template-columns:1fr auto;gap:.8rem;padding:.75rem 0;border-bottom:1px solid var(--line);align-items:start}
+.item:last-child{border-bottom:0}
+.item .t{font-weight:600}
+.item .m{font-size:.85rem;color:var(--muted);font-family:var(--mono)}
+.chip{display:inline-block;font:500 .64rem var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:.1em .5em;border-radius:3px;border:1px solid currentColor;margin-right:.4rem;vertical-align:1px}
+.cat-training{color:#2D5F8B}.cat-club{color:var(--brass)}.cat-meeting{color:#5B4A8B}.cat-closure{color:var(--bad)}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.8rem}
+.ph{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--sunk);display:flex;flex-direction:column}
+.ph img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.ph .b{padding:.5rem;display:flex;flex-direction:column;gap:.4rem}
+.tag{font:500 .64rem var(--mono);letter-spacing:.1em;text-transform:uppercase;background:var(--brass-bright);color:#16110A;padding:.15em .45em;border-radius:3px;align-self:flex-start}
+.note{border-radius:6px;padding:.6rem .8rem;font-size:.9rem;font-weight:500}
+.note.warn{background:var(--brass-soft);color:var(--brass)}
+.note.err{background:var(--bad-soft);color:var(--bad)}
+.note.ok{background:var(--ok-soft);color:var(--ok)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:.6rem 1rem;border-radius:6px;font-size:.9rem;z-index:50}
+.auth{max-width:420px;margin:8vh auto 0}
+pre.preview{white-space:pre-wrap;background:var(--sunk);border-radius:6px;padding:.8rem;font:.88rem/1.5 var(--mono);margin:0;max-height:360px;overflow:auto}
+.modal-bg{position:fixed;inset:0;background:#0009;z-index:40;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--surface);border-radius:12px;padding:1.2rem;width:min(560px,100%);max-height:90vh;overflow:auto;display:flex;flex-direction:column;gap:.8rem}
+</style>
+</head>
+<body>
+<header><div class="in"><b>SRGC Site Manager</b><a href="/" target="_blank" rel="noopener">View site</a><span id="who" style="font-size:.85rem;opacity:.8"></span><button class="btn sm" id="logout" hidden style="background:transparent;border-color:#ffffff40;color:var(--on-steel)">Sign out</button></div></header>
+<main>
+
+<!-- sign in -->
+<section id="vLogin" class="auth" hidden>
+  <div class="card">
+    <h2>Officer sign in</h2>
+    <label class="f">Email<input id="lEmail" type="email" autocomplete="username"></label>
+    <label class="f">Password<input id="lPw" type="password" autocomplete="current-password"></label>
+    <p class="note err" id="lErr" hidden></p>
+    <div class="btns"><button class="btn primary" id="lGo">Sign in</button><button class="btn sm" id="toSetup" style="margin-left:auto">Use setup key</button></div>
+    <p class="help">Forgot your password? Ask another officer to reset it from the Officers tab.</p>
+  </div>
+</section>
+
+<!-- first-time setup / recovery -->
+<section id="vSetup" class="auth" hidden>
+  <div class="card">
+    <h2 id="sTitle">Set up the first officer</h2>
+    <p class="help">Enter the setup key saved in the club's Cloudflare account (Worker <b>srgc</b> → Settings → Variables and Secrets → <b>SETUP_KEY</b>). This also works to regain access if every officer is locked out.</p>
+    <label class="f">Setup key<input id="sKey" type="password" autocomplete="off"></label>
+    <label class="f">Your name<input id="sName" autocomplete="name"></label>
+    <label class="f">Your email<input id="sEmail" type="email" autocomplete="username"></label>
+    <label class="f">Choose a password (10+ characters)<input id="sPw" type="password" autocomplete="new-password"></label>
+    <p class="note err" id="sErr" hidden></p>
+    <div class="btns"><button class="btn primary" id="sGo">Create officer &amp; sign in</button><button class="btn sm" id="toLogin" style="margin-left:auto">Back to sign in</button></div>
+  </div>
+</section>
+
+<!-- app -->
+<section id="vApp" hidden>
+  <div class="tabs" role="tablist">
+    <button role="tab" data-tab="tHours" aria-selected="true">Hours &amp; notice</button>
+    <button role="tab" data-tab="tEvents">Calendar</button>
+    <button role="tab" data-tab="tPhotos">Photos</button>
+    <button role="tab" data-tab="tNotify">Notify members</button>
+    <button role="tab" data-tab="tOfficers">Officers</button>
+  </div>
+
+  <div id="tHours" class="tab">
+    <div class="card">
+      <h3>Notice banner</h3>
+      <p class="help">A short message across the top of every page. Use it for surprise closures or big news.</p>
+      <label class="f">Message<textarea id="bText" maxlength="300"></textarea></label>
+      <label class="chk"><input type="checkbox" id="bOn"> Show the banner</label>
+      <div class="btns"><button class="btn primary" id="bSave">Save banner</button></div>
+    </div>
+    <div class="card">
+      <h3>Weekly hours</h3>
+      <p class="note warn" id="hWarn" hidden>These hours are marked as not confirmed yet.</p>
+      <div id="hRows"></div>
+      <label class="f">Note under the hours<textarea id="hNote" maxlength="500"></textarea></label>
+      <label class="chk"><input type="checkbox" id="hConf"> These hours are confirmed</label>
+      <div class="btns"><button class="btn primary" id="hSave">Save hours</button></div>
+      <p class="help">For one-off closures (holidays, classes on the range), add a <b>Closure</b> event in the Calendar tab. The site marks those days closed automatically.</p>
+    </div>
+  </div>
+
+  <div id="tEvents" class="tab" hidden>
+    <div class="card">
+      <div class="btns" style="justify-content:space-between"><h3>Calendar events</h3><button class="btn primary" id="eAdd">Add event</button></div>
+      <label class="chk"><input type="checkbox" id="ePast"> Show past events</label>
+      <div class="list" id="eList"></div>
+    </div>
+  </div>
+
+  <div id="tPhotos" class="tab" hidden>
+    <div class="card">
+      <div class="btns" style="justify-content:space-between"><h3>Photos</h3><label class="btn primary" for="pIn" style="cursor:pointer">Add photos</label></div>
+      <input type="file" id="pIn" accept="image/*" multiple hidden>
+      <p class="help" id="pStatus">Photos are resized to 2000 px before upload. Choose one as the cover to show it behind the club name at the top of the site.</p>
+      <div class="photos" id="pGrid"></div>
+    </div>
+  </div>
+
+  <div id="tNotify" class="tab" hidden>
+    <div class="card">
+      <h3>Email members</h3>
+      <p class="help">Builds a notice from the current site info. Check it, edit if needed, then tap <b>Open in Gmail</b> and press Send. It goes to the club's Google Group, which reaches every member.</p>
+      <p class="note warn" id="nNoGroup" hidden>Add the members' Google Group address below first.</p>
+      <label class="f">Subject<input id="nSubj"></label>
+      <label class="f">Message<textarea id="nBody" style="min-height:260px"></textarea></label>
+      <div class="btns"><button class="btn primary" id="nGmail">Open in Gmail</button><button class="btn" id="nCopy">Copy message</button><button class="btn sm" id="nRebuild">Rebuild from site</button></div>
+      <p class="help">Sign in to Gmail as the club account (srgcnyc@gmail.com) or as an officer allowed to post to the group.</p>
+    </div>
+    <div class="card">
+      <h3>Settings</h3>
+      <label class="f">Members' Google Group address<input id="nGroup" type="email" placeholder="srgc-members@googlegroups.com"></label>
+      <label class="f">Sign-off<input id="nSig"></label>
+      <div class="btns"><button class="btn" id="nSave">Save settings</button></div>
+    </div>
+  </div>
+
+  <div id="tOfficers" class="tab" hidden>
+    <div class="card">
+      <h3>Officers who can sign in</h3>
+      <div class="list" id="oList"></div>
+    </div>
+    <div class="card">
+      <h3>Add an officer or reset a password</h3>
+      <div class="row"><label class="f">Name<input id="oName"></label><label class="f">Email<input id="oEmail" type="email"></label><label class="f">Temporary password<input id="oPw" type="text" autocomplete="off"></label></div>
+      <div class="btns"><button class="btn primary" id="oAdd">Add officer</button><button class="btn sm" id="oGen">Generate password</button></div>
+      <p class="help">Give them the temporary password in person or by phone, and ask them to change it under "My password".</p>
+    </div>
+    <div class="card">
+      <h3>My password</h3>
+      <div class="row"><label class="f">Current password<input id="mCur" type="password" autocomplete="current-password"></label><label class="f">New password (10+ characters)<input id="mNew" type="password" autocomplete="new-password"></label></div>
+      <div class="btns"><button class="btn" id="mSave">Change my password</button></div>
+    </div>
+  </div>
+</section>
+</main>
+<div id="modalRoot"></div>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const DOW=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const CATS={training:'Training',club:'Club',meeting:'Meeting',closure:'Closure'};
+let S=null, me=null;
+
+async function api(path, opts={}){
+  const o={method:opts.method||'GET',headers:{'X-SRGC':'1',...(opts.headers||{})},credentials:'same-origin'};
+  if(opts.json!==undefined){o.headers['Content-Type']='application/json';o.body=JSON.stringify(opts.json);}
+  if(opts.body){o.body=opts.body;}
+  const r=await fetch('/api/admin/'+path,o);
+  let d={}; try{d=await r.json();}catch{}
+  if(!r.ok){ const e=new Error(d.error||('Request failed ('+r.status+')')); e.status=r.status; throw e; }
+  return d;
+}
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;t.setAttribute('role','status');document.body.appendChild(t);setTimeout(()=>t.remove(),2800);}
+function busy(btn,fn){return async()=>{btn.disabled=true;try{await fn();}catch(e){ if(e.status===401){show('login');} toast(e.message);}finally{btn.disabled=false;}};}
+function show(v){ $('#vLogin').hidden=v!=='login'; $('#vSetup').hidden=v!=='setup'; $('#vApp').hidden=v!=='app'; $('#logout').hidden=v!=='app'; }
+const fmtT=t=>{ if(!t) return ''; let [h,m]=t.split(':').map(Number); const ap=h>=12?'PM':'AM'; h=h%12||12; return m?`${h}:${String(m).padStart(2,'0')} ${ap}`:`${h} ${ap}`; };
+const fmtD=d=>new Date(d+'T12:00:00Z').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',timeZone:'UTC'});
+const nyToday=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York'}).format(new Date());
+const addDays=(d,n)=>{const x=new Date(d+'T12:00:00Z');x.setUTCDate(x.getUTCDate()+n);return x.toISOString().slice(0,10);};
+const when=e=>`${fmtD(e.date)}${e.endDate&&e.endDate!==e.date?' – '+fmtD(e.endDate):''}${e.start?' · '+fmtT(e.start)+(e.end?' – '+fmtT(e.end):''):''}`;
+
+// ---------- boot ----------
+async function boot(){
+  let st; try{ st=await api('status'); }catch(e){ document.querySelector('main').innerHTML='<div class="card"><p class="note err">The site manager could not reach its database. '+esc(e.message)+'</p></div>'; return; }
+  if(st.me){ me=st.me; await load(); show('app'); }
+  else if(st.needsSetup){ $('#sTitle').textContent='Set up the first officer'; show('setup'); }
+  else show('login');
+}
+async function load(){ S=await api('content'); $('#who').textContent=me?`${me.name}`:''; renderAll(); }
+function renderAll(){ renderBanner(); renderHours(); renderEvents(); renderPhotos(); renderNotify(true); renderOfficers(); }
+
+// ---------- auth ----------
+$('#lGo').onclick=async()=>{ $('#lErr').hidden=true; try{ await api('login',{method:'POST',json:{email:$('#lEmail').value,password:$('#lPw').value}}); const st=await api('status'); me=st.me; await load(); show('app'); }catch(e){ $('#lErr').textContent=e.message; $('#lErr').hidden=false; } };
+$('#lPw').addEventListener('keydown',e=>{ if(e.key==='Enter') $('#lGo').click(); });
+$('#toSetup').onclick=()=>{ $('#sTitle').textContent='Sign in with the setup key'; show('setup'); };
+$('#toLogin').onclick=()=>show('login');
+$('#sGo').onclick=async()=>{ $('#sErr').hidden=true; try{ await api('setup',{method:'POST',json:{setupKey:$('#sKey').value,name:$('#sName').value,email:$('#sEmail').value,password:$('#sPw').value}}); const st=await api('status'); me=st.me; await load(); show('app'); toast('Signed in'); }catch(e){ $('#sErr').textContent=e.message; $('#sErr').hidden=false; } };
+$('#logout').onclick=async()=>{ await api('logout',{method:'POST'}).catch(()=>{}); me=null; show('login'); };
+
+// ---------- tabs ----------
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{ document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b)); document.querySelectorAll('.tab').forEach(t=>t.hidden=t.id!==b.dataset.tab); if(b.dataset.tab==='tNotify') renderNotify(false); });
+
+// ---------- banner ----------
+function renderBanner(){ $('#bText').value=S.banner?.text||''; $('#bOn').checked=!!S.banner?.on; }
+$('#bSave').onclick=busy($('#bSave'),async()=>{ await api('banner',{method:'PUT',json:{text:$('#bText').value,on:$('#bOn').checked}}); S.banner={text:$('#bText').value,on:$('#bOn').checked}; toast('Banner saved. It is live now.'); });
+
+// ---------- hours ----------
+const ORDER=[1,2,3,4,5,6,0];
+function renderHours(){
+  const days=S.hours?.days||[];
+  $('#hRows').innerHTML=ORDER.map(i=>{const d=days[i]||{closed:true};return `<div class="hrow"><span>${DOW[i]}</span><label class="chk"><input type="checkbox" id="hc${i}" ${d.closed?'checked':''}> Closed</label><input type="time" id="ho${i}" value="${esc(d.open||'19:00')}" ${d.closed?'disabled':''} aria-label="${DOW[i]} opens"><input type="time" id="hx${i}" value="${esc(d.close||'22:00')}" ${d.closed?'disabled':''} aria-label="${DOW[i]} closes"></div>`;}).join('');
+  ORDER.forEach(i=>$('#hc'+i).onchange=e=>{ $('#ho'+i).disabled=$('#hx'+i).disabled=e.target.checked; });
+  $('#hNote').value=S.hours?.note||''; $('#hConf').checked=!!S.hours?.confirmed; $('#hWarn').hidden=!!S.hours?.confirmed;
+}
+$('#hSave').onclick=busy($('#hSave'),async()=>{
+  const days=[0,1,2,3,4,5,6].map(i=>$('#hc'+i).checked?{closed:true}:{closed:false,open:$('#ho'+i).value,close:$('#hx'+i).value});
+  await api('hours',{method:'PUT',json:{days,note:$('#hNote').value,confirmed:$('#hConf').checked}});
+  S.hours={days,note:$('#hNote').value,confirmed:$('#hConf').checked}; $('#hWarn').hidden=S.hours.confirmed; toast('Hours saved. They are live now.');
+});
+
+// ---------- events ----------
+function renderEvents(){
+  const t=nyToday(); const past=$('#ePast').checked;
+  const list=S.events.filter(e=>past||(e.endDate||e.date)>=t);
+  $('#eList').innerHTML=list.length?list.map(e=>`<div class="item"><div><div class="t"><span class="chip cat-${esc(e.category)}">${esc(CATS[e.category]||e.category)}</span>${esc(e.title)}</div><div class="m">${esc(when(e))}</div>${e.desc?`<div class="help">${esc(e.desc)}</div>`:''}</div><div class="btns"><button class="btn sm" data-ev="${e.id}">Edit</button></div></div>`).join(''):'<p class="help">No upcoming events. Tap "Add event" to create one.</p>';
+}
+$('#ePast').onchange=renderEvents;
+$('#eList').addEventListener('click',e=>{const b=e.target.closest('[data-ev]'); if(b) editEvent(+b.dataset.ev);});
+$('#eAdd').onclick=()=>editEvent(null);
+function modal(html){ const r=$('#modalRoot'); r.innerHTML=`<div class="modal-bg"><div class="modal" role="dialog" aria-modal="true">${html}</div></div>`; r.querySelector('.modal-bg').onclick=e=>{ if(e.target.classList.contains('modal-bg')) r.innerHTML=''; }; return r.querySelector('.modal'); }
+const closeModal=()=>$('#modalRoot').innerHTML='';
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+function editEvent(id){
+  const e=id?S.events.find(x=>x.id===id):{title:'',category:'club',date:nyToday(),endDate:'',start:'',end:'',desc:''};
+  const m=modal(`<h3>${id?'Edit event':'Add event'}</h3>
+   <label class="f">Title<input id="fT" value="${esc(e.title)}" maxlength="150"></label>
+   <div class="row"><label class="f">Type<select id="fC">${Object.entries(CATS).map(([k,v])=>`<option value="${k}" ${e.category===k?'selected':''}>${v}</option>`).join('')}</select></label>
+   <label class="f">Date<input type="date" id="fD" value="${esc(e.date)}"></label><label class="f">End date (optional)<input type="date" id="fE" value="${esc(e.endDate)}"></label></div>
+   <div class="row"><label class="f">Start time (optional)<input type="time" id="fS" value="${esc(e.start)}"></label><label class="f">End time (optional)<input type="time" id="fX" value="${esc(e.end)}"></label></div>
+   <label class="f">Details<textarea id="fDesc" maxlength="2000">${esc(e.desc)}</textarea></label>
+   <p class="help">A <b>Closure</b> marks the range closed on those dates.</p>
+   <p class="note err" id="fErr" hidden></p>
+   <div class="btns">${id?'<button class="btn danger" id="fDel">Delete</button>':''}<span style="flex:1"></span><button class="btn" id="fCancel">Cancel</button><button class="btn primary" id="fSave">${id?'Save changes':'Add to calendar'}</button></div>`);
+  m.querySelector('#fCancel').onclick=closeModal;
+  m.querySelector('#fSave').onclick=async()=>{ const body={title:$('#fT').value,category:$('#fC').value,date:$('#fD').value,endDate:$('#fE').value,start:$('#fS').value,end:$('#fX').value,desc:$('#fDesc').value};
+    try{ await api(id?'events/'+id:'events',{method:id?'PUT':'POST',json:body}); closeModal(); S=await api('content'); renderEvents(); toast(id?'Event updated':'Event added'); }catch(err){ $('#fErr').textContent=err.message; $('#fErr').hidden=false; } };
+  const del=m.querySelector('#fDel'); if(del) del.onclick=async()=>{ if(del.dataset.armed!=='1'){del.dataset.armed='1';del.textContent='Tap again to delete';return;} try{ await api('events/'+id,{method:'DELETE'}); closeModal(); S=await api('content'); renderEvents(); toast('Event deleted'); }catch(err){ $('#fErr').textContent=err.message; $('#fErr').hidden=false; } };
+}
+
+// ---------- photos ----------
+function renderPhotos(){
+  $('#pGrid').innerHTML=S.photos.length?S.photos.map(p=>`<div class="ph"><img src="${esc(p.src)}" alt="${esc(p.caption||'Club photo')}" loading="lazy"><div class="b">${S.coverId===p.id?'<span class="tag">Cover</span>':''}<input value="${esc(p.caption)}" placeholder="Caption" data-cap="${p.id}" aria-label="Caption" maxlength="200"><div class="btns"><button class="btn sm" data-cover="${p.id}">${S.coverId===p.id?'Remove cover':'Set as cover'}</button><button class="btn sm danger" data-del="${p.id}">Delete</button></div></div></div>`).join(''):'<p class="help">No photos yet. The site shows placeholder tiles until you add some.</p>';
+}
+$('#pGrid').addEventListener('change',async e=>{ const i=e.target.closest('[data-cap]'); if(!i) return; try{ await api('photos/'+i.dataset.cap,{method:'PUT',json:{caption:i.value}}); toast('Caption saved'); }catch(err){ toast(err.message); } });
+$('#pGrid').addEventListener('click',async e=>{
+  const c=e.target.closest('[data-cover]'), d=e.target.closest('[data-del]');
+  try{
+    if(c){ const id=+c.dataset.cover; await api('cover',{method:'PUT',json:{photoId:S.coverId===id?null:id}}); S=await api('content'); renderPhotos(); toast('Cover updated'); }
+    if(d){ if(d.dataset.armed!=='1'){d.dataset.armed='1';d.textContent='Tap to confirm';return;} await api('photos/'+d.dataset.del,{method:'DELETE'}); S=await api('content'); renderPhotos(); toast('Photo deleted'); }
+  }catch(err){ toast(err.message); }
+});
+function resize(file,max=2000){return new Promise((res,rej)=>{const img=new Image();const u=URL.createObjectURL(file);img.onload=()=>{const s=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(b=>b?res(b):rej(new Error('Could not read that image.')),'image/jpeg',.85);};img.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('Could not read that image.'));};img.src=u;});}
+$('#pIn').onchange=async e=>{
+  const files=[...e.target.files]; e.target.value=''; if(!files.length) return;
+  let ok=0,bad=0; for(const f of files){ $('#pStatus').textContent=`Uploading ${ok+bad+1} of ${files.length}…`; try{ const b=await resize(f); await api('photos',{method:'POST',headers:{'Content-Type':'image/jpeg'},body:b}); ok++; }catch(err){ bad++; } }
+  S=await api('content'); renderPhotos(); $('#pStatus').textContent=bad?`${ok} uploaded, ${bad} failed. Try the failed ones again.`:`${ok} photo${ok===1?'':'s'} added.`;
+};
+
+// ---------- notify ----------
+function buildNotice(){
+  const t=nyToday(), soon=addDays(t,14), lines=[];
+  const days=S.hours?.days||[];
+  if(S.banner?.on && S.banner.text) lines.push(S.banner.text,'');
+  const closures=S.events.filter(e=>e.category==='closure' && (e.endDate||e.date)>=t && e.date<=soon);
+  const upcoming=S.events.filter(e=>e.category!=='closure' && (e.endDate||e.date)>=t && e.date<=soon);
+  if(closures.length){ lines.push('RANGE CLOSURES'); closures.forEach(e=>lines.push(`- ${when(e)}: ${e.title}${e.desc?' ('+e.desc+')':''}`)); lines.push(''); }
+  if(upcoming.length){ lines.push('COMING UP'); upcoming.forEach(e=>lines.push(`- ${when(e)}: ${e.title}${e.desc?'. '+e.desc:''}`)); lines.push(''); }
+  lines.push('REGULAR HOURS'); ORDER.forEach(i=>{const d=days[i]||{closed:true}; lines.push(`- ${DOW[i]}: ${d.closed?'Closed':fmtT(d.open)+' – '+fmtT(d.close)}`);});
+  if(S.hours?.note) lines.push('',S.hours.note);
+  lines.push('','Full calendar: '+location.origin+'/#calendar','',S.notify?.signature||'Stuyvesant Rod & Gun Club','64-69 Dry Harbor Rd, Middle Village, NY 11379 · 718-326-7350');
+  $('#nSubj').value = closures.length? 'SRGC schedule update: range closure '+fmtD(closures[0].date) : 'SRGC schedule update';
+  $('#nBody').value = lines.join('\n');
+}
+function renderNotify(rebuild){ $('#nGroup').value=S.notify?.group||''; $('#nSig').value=S.notify?.signature||''; $('#nNoGroup').hidden=!!S.notify?.group; if(rebuild||!$('#nBody').value) buildNotice(); }
+$('#nRebuild').onclick=buildNotice;
+$('#nSave').onclick=busy($('#nSave'),async()=>{ await api('notify',{method:'PUT',json:{group:$('#nGroup').value,signature:$('#nSig').value}}); S.notify={group:$('#nGroup').value.trim(),signature:$('#nSig').value}; $('#nNoGroup').hidden=!!S.notify.group; toast('Settings saved'); });
+$('#nGmail').onclick=()=>{
+  if(!S.notify?.group){ toast('Add the Google Group address in Settings first.'); return; }
+  const u='https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(S.notify.group)+'&su='+encodeURIComponent($('#nSubj').value)+'&body='+encodeURIComponent($('#nBody').value);
+  window.open(u,'_blank','noopener');
+};
+$('#nCopy').onclick=async()=>{ try{ await navigator.clipboard.writeText($('#nSubj').value+'\n\n'+$('#nBody').value); toast('Copied'); }catch{ $('#nBody').select(); toast('Press Ctrl+C / Cmd+C to copy'); } };
+
+// ---------- officers ----------
+function renderOfficers(){
+  $('#oList').innerHTML=S.officers.map(o=>`<div class="item"><div><div class="t">${esc(o.name||o.email)}${me&&o.email===me.email?' <span class="chip" style="color:var(--muted)">You</span>':''}</div><div class="m">${esc(o.email)}</div></div><div class="btns"><button class="btn sm" data-reset="${esc(o.email)}" data-name="${esc(o.name)}">Reset password</button>${me&&o.email!==me.email?`<button class="btn sm danger" data-rm="${esc(o.email)}">Remove</button>`:''}</div></div>`).join('');
+}
+const genPw=()=>{const a='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';const r=crypto.getRandomValues(new Uint32Array(14));return [...r].map(x=>a[x%a.length]).join('');};
+$('#oGen').onclick=()=>{$('#oPw').value=genPw();};
+$('#oAdd').onclick=busy($('#oAdd'),async()=>{ const reset=$('#oAdd').dataset.reset==='1'; await api('officers',{method:'POST',json:{name:$('#oName').value,email:$('#oEmail').value,password:$('#oPw').value,reset}}); toast(reset?'Password reset':'Officer added'); $('#oAdd').dataset.reset=''; $('#oAdd').textContent='Add officer'; $('#oName').value=$('#oEmail').value=$('#oPw').value=''; S=await api('content'); renderOfficers(); });
+$('#oList').addEventListener('click',async e=>{
+  const r=e.target.closest('[data-reset]'), x=e.target.closest('[data-rm]');
+  if(r){ $('#oName').value=r.dataset.name; $('#oEmail').value=r.dataset.reset; $('#oPw').value=genPw(); $('#oAdd').dataset.reset='1'; $('#oAdd').textContent='Reset password'; $('#oName').scrollIntoView({behavior:'smooth',block:'center'}); }
+  if(x){ if(x.dataset.armed!=='1'){x.dataset.armed='1';x.textContent='Tap to confirm';return;} try{ await api('officers/'+encodeURIComponent(x.dataset.rm),{method:'DELETE'}); S=await api('content'); renderOfficers(); toast('Officer removed'); }catch(err){ toast(err.message); } }
+});
+$('#mSave').onclick=busy($('#mSave'),async()=>{ await api('password',{method:'PUT',json:{current:$('#mCur').value,password:$('#mNew').value}}); $('#mCur').value=$('#mNew').value=''; toast('Password changed'); });
+
+boot();
+})();
+</script>
+</body>
+</html>
