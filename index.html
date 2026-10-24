@@ -125,7 +125,7 @@ section.block + section.block{border-top:1px solid var(--line)}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.4rem}
 .panel h3{margin-bottom:1rem}
 table.hours{width:100%;border-collapse:collapse}
-table.hours td{padding:.62rem 0;border-bottom:1px solid var(--line)}
+table.hours td{padding:.62rem 0;border-bottom:1px solid var(--line);vertical-align:top}
 table.hours tr:last-child td{border-bottom:0}
 table.hours td:last-child{text-align:right;font-family:var(--mono);font-size:.92rem}
 table.hours tr.is-today td{font-weight:600}
@@ -279,7 +279,7 @@ body.editing .admin-flex{display:flex}
 <body>
 
 
-<div class="preview-bar"><div class="wrap">Design preview of a proposed new website. Not the official club site; hours and details shown here are not final.</div></div>
+<div class="preview-bar"><div class="wrap">Design preview of a proposed new website. Not the official club site yet.</div></div>
 <div class="banner" id="banner" hidden><div class="wrap"><span class="tag">Notice</span><span id="bannerText"></span></div></div>
 
 <header class="top">
@@ -562,23 +562,32 @@ function addDays(ymd,n){ const d=new Date(ymd+'T12:00:00Z'); d.setUTCDate(d.getU
 function dowOf(ymd){ return new Date(ymd+'T12:00:00Z').getUTCDay(); }
 function fmtDate(ymd,opts={weekday:'short',month:'short',day:'numeric'}){ return new Date(ymd+'T12:00:00Z').toLocaleDateString('en-US',{...opts,timeZone:'UTC'}); }
 function closureOn(ymd){ return state.events.find(e=>e.category==='closure' && e.date<=ymd && (e.endDate||e.date)>=ymd); }
+// A day can have several open periods, e.g. 10 AM–1 PM and 7–9 PM.
+function rangesOf(d){
+  if(!d || d.closed) return [];
+  const r = Array.isArray(d.ranges)? d.ranges : (d.open&&d.close? [{open:d.open,close:d.close}] : []);
+  return r.filter(x=>x&&x.open&&x.close&&x.close>x.open).sort((a,b)=>a.open.localeCompare(b.open));
+}
+const fmtRanges = r => r.map(x=>`${fmtT(x.open)} – ${fmtT(x.close)}`).join(' & ');
 function dayHours(ymd){
-  const c = closureOn(ymd); if(c) return {closed:true,reason:c.title};
-  const d = (state.hours?.days||[])[dowOf(ymd)]; if(!d || d.closed || !d.open || !d.close) return {closed:true};
-  return {closed:false,open:d.open,close:d.close};
+  const c = closureOn(ymd); if(c) return {closed:true,ranges:[],reason:c.title};
+  const r = rangesOf((state.hours?.days||[])[dowOf(ymd)]);
+  return r.length? {closed:false,ranges:r} : {closed:true,ranges:[]};
 }
 
 // ---------- status ----------
 function renderStatus(){
   const n = nyNow(); const today = dayHours(n.ymd);
   let open=false, detail='', why='';
-  if(!today.closed){ const o=toMin(today.open), c=toMin(today.close); if(n.mins>=o && n.mins<c){ open=true; detail=`Open until ${fmtT(today.close)}`; } }
+  const cur = today.ranges.find(r=>n.mins>=toMin(r.open) && n.mins<toMin(r.close));
+  if(cur){ open=true; detail=`Open until ${fmtT(cur.close)}`; }
   if(!open){
-    for(let i=0;i<60;i++){
+    outer: for(let i=0;i<60;i++){
       const ymd=addDays(n.ymd,i), h=dayHours(ymd);
-      if(h.closed) continue;
-      if(i===0 && n.mins>=toMin(h.open)) continue;
-      detail = i===0? `Opens today at ${fmtT(h.open)}` : i===1? `Opens tomorrow at ${fmtT(h.open)}` : `Opens ${fmtDate(ymd)} at ${fmtT(h.open)}`; break;
+      for(const r of h.ranges){
+        if(i===0 && n.mins>=toMin(r.open)) continue;
+        detail = i===0? `Opens today at ${fmtT(r.open)}` : i===1? `Opens tomorrow at ${fmtT(r.open)}` : `Opens ${fmtDate(ymd)} at ${fmtT(r.open)}`; break outer;
+      }
     }
     if(today.reason) why = today.reason;
   }
@@ -586,15 +595,15 @@ function renderStatus(){
   $('#stDot').className = 'dot '+(open?'on':'off');
   $('#stDetail').textContent = detail;
   $('#stWhy').textContent = why;
-  $('#stToday').textContent = today.closed? 'Closed' : `${fmtT(today.open)} – ${fmtT(today.close)}`;
+  $('#stToday').textContent = today.closed? 'Closed' : fmtRanges(today.ranges);
 }
 
 // ---------- hours ----------
 function renderHours(){
   const n = nyNow(), days = state.hours?.days||[];
   const order=[1,2,3,4,5,6,0];
-  $('#hoursTable').innerHTML = order.map(i=>{ const d=days[i]||{closed:true}; const shut=d.closed||!d.open;
-    return `<tr class="${i===n.dow?'is-today':''}"><td>${DOW[i]}</td><td>${shut?'<span class="closed-txt">Closed</span>':`${fmtT(d.open)} – ${fmtT(d.close)}`}</td></tr>`; }).join('');
+  $('#hoursTable').innerHTML = order.map(i=>{ const r=rangesOf(days[i]);
+    return `<tr class="${i===n.dow?'is-today':''}"><td>${DOW[i]}</td><td>${!r.length?'<span class="closed-txt">Closed</span>':r.map(x=>`<span style="display:block">${fmtT(x.open)} – ${fmtT(x.close)}</span>`).join('')}</td></tr>`; }).join('');
   const c = closureOn(n.ymd) || state.events.filter(e=>e.category==='closure' && e.date>n.ymd && e.date<=addDays(n.ymd,14)).sort((a,b)=>a.date.localeCompare(b.date))[0];
   const ov=$('#hoursOverride');
   if(c){ ov.hidden=false; ov.textContent = `${c.title}: ${fmtDate(c.date)}${c.endDate&&c.endDate!==c.date?' – '+fmtDate(c.endDate):''}`; } else ov.hidden=true;
@@ -602,7 +611,7 @@ function renderHours(){
   $('#hoursWarn').hidden = !!state.hours?.confirmed;
   // form
   $('#hoursForm').innerHTML = order.map(i=>{ const d=days[i]||{closed:true};
-    return `<div class="hrow"><span>${DOW[i].slice(0,3)}</span><label style="display:flex;gap:.3rem;align-items:center;font-size:.8rem"><input type="checkbox" id="hc${i}" ${d.closed?'checked':''}> Closed</label><input type="time" id="ho${i}" value="${esc(d.open||'19:00')}" ${d.closed?'disabled':''} aria-label="${DOW[i]} opens"><input type="time" id="hx${i}" value="${esc(d.close||'22:00')}" ${d.closed?'disabled':''} aria-label="${DOW[i]} closes"></div>`; }).join('');
+    const f=rangesOf(d)[0]||{}; return `<div class="hrow"><span>${DOW[i].slice(0,3)}</span><label style="display:flex;gap:.3rem;align-items:center;font-size:.8rem"><input type="checkbox" id="hc${i}" ${d.closed?'checked':''}> Closed</label><input type="time" id="ho${i}" value="${esc(f.open||'19:00')}" ${d.closed?'disabled':''} aria-label="${DOW[i]} opens"><input type="time" id="hx${i}" value="${esc(f.close||'22:00')}" ${d.closed?'disabled':''} aria-label="${DOW[i]} closes"></div>`; }).join('');
   order.forEach(i=>$('#hc'+i).addEventListener('change',e=>{ $('#ho'+i).disabled=$('#hx'+i).disabled=e.target.checked; }));
   $('#hoursNoteIn').value = state.hours?.note||'';
   $('#hoursConfirmed').checked = !!state.hours?.confirmed;

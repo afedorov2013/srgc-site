@@ -39,10 +39,17 @@ input[type=checkbox]{width:auto}
 .btn.sm{font-size:.8rem;padding:.35em .7em}
 .btn:disabled{opacity:.5;cursor:default}
 :focus-visible{outline:2px solid var(--brass-bright);outline-offset:2px}
-.hrow{display:grid;grid-template-columns:6.5rem 6rem 1fr 1fr;gap:.5rem;align-items:center;padding:.35rem 0;border-bottom:1px solid var(--line)}
-.hrow:last-child{border-bottom:0}
-.hrow input[type=time]{min-width:0}
-@media (max-width:560px){.hrow{grid-template-columns:1fr 1fr;row-gap:.35rem}.hrow .chk{justify-self:end}}
+.hday{display:grid;grid-template-columns:7rem 1fr;gap:.5rem 1rem;padding:.6rem 0;border-bottom:1px solid var(--line)}
+.hday:last-child{border-bottom:0}
+.hday .dn{font-weight:600;padding-top:.45rem}
+.hday .rs{display:flex;flex-direction:column;gap:.4rem}
+.hrange{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto;gap:.4rem;align-items:center}
+.hrange input[type=time]{min-width:0}
+.hrange .to{color:var(--muted);font-size:.85rem}
+.hday .top{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
+.hday .closedtxt{color:var(--muted);font-size:.9rem}
+.x{background:none;border:1px solid var(--line);border-radius:6px;color:var(--muted);width:2.1rem;height:2.1rem;cursor:pointer;font-size:1rem}
+@media (max-width:560px){.hday{grid-template-columns:1fr}.hday .dn{padding-top:0}}
 .list{display:flex;flex-direction:column}
 .item{display:grid;grid-template-columns:1fr auto;gap:.8rem;padding:.75rem 0;border-bottom:1px solid var(--line);align-items:start}
 .item:last-child{border-bottom:0}
@@ -234,14 +241,29 @@ $('#bSave').onclick=busy($('#bSave'),async()=>{ await api('banner',{method:'PUT'
 
 // ---------- hours ----------
 const ORDER=[1,2,3,4,5,6,0];
+// Each day: closed, or one or more open periods (e.g. 10 AM–1 PM and 7–9 PM).
+function rangesOf(d){ if(!d||d.closed) return []; const r=Array.isArray(d.ranges)?d.ranges:(d.open&&d.close?[{open:d.open,close:d.close}]:[]); return r.filter(x=>x&&x.open&&x.close).map(x=>({open:x.open,close:x.close})).sort((a,b)=>a.open.localeCompare(b.open)); }
+let W=[];
 function renderHours(){
   const days=S.hours?.days||[];
-  $('#hRows').innerHTML=ORDER.map(i=>{const d=days[i]||{closed:true};return `<div class="hrow"><span>${DOW[i]}</span><label class="chk"><input type="checkbox" id="hc${i}" ${d.closed?'checked':''}> Closed</label><input type="time" id="ho${i}" value="${esc(d.open||'19:00')}" ${d.closed?'disabled':''} aria-label="${DOW[i]} opens"><input type="time" id="hx${i}" value="${esc(d.close||'22:00')}" ${d.closed?'disabled':''} aria-label="${DOW[i]} closes"></div>`;}).join('');
-  ORDER.forEach(i=>$('#hc'+i).onchange=e=>{ $('#ho'+i).disabled=$('#hx'+i).disabled=e.target.checked; });
+  W=[0,1,2,3,4,5,6].map(i=>{const r=rangesOf(days[i]); return {closed:!r.length, ranges:r.length?r:[{open:'19:00',close:'21:00'}]};});
+  drawHours();
   $('#hNote').value=S.hours?.note||''; $('#hConf').checked=!!S.hours?.confirmed; $('#hWarn').hidden=!!S.hours?.confirmed;
 }
+function drawHours(){
+  $('#hRows').innerHTML=ORDER.map(i=>{const d=W[i];
+    const rows=d.closed?'<span class="closedtxt">Closed all day</span>':d.ranges.map((r,k)=>`<div class="hrange"><input type="time" data-d="${i}" data-k="${k}" data-f="open" value="${esc(r.open)}" aria-label="${DOW[i]} period ${k+1} opens"><span class="to">to</span><input type="time" data-d="${i}" data-k="${k}" data-f="close" value="${esc(r.close)}" aria-label="${DOW[i]} period ${k+1} closes">${d.ranges.length>1?`<button class="x" data-rm="${i}:${k}" aria-label="Remove this time period" title="Remove">×</button>`:'<span></span>'}</div>`).join('');
+    return `<div class="hday"><div class="dn">${DOW[i]}</div><div class="rs">${rows}<div class="top"><label class="chk"><input type="checkbox" data-closed="${i}" ${d.closed?'checked':''}> Closed</label>${!d.closed&&d.ranges.length<4?`<button class="btn sm" data-add="${i}">+ Add another time</button>`:''}</div></div></div>`;}).join('');
+}
+$('#hRows').addEventListener('input',e=>{const t=e.target; if(t.dataset.f){ W[+t.dataset.d].ranges[+t.dataset.k][t.dataset.f]=t.value; }});
+$('#hRows').addEventListener('change',e=>{const t=e.target; if(t.dataset.closed!==undefined){ W[+t.dataset.closed].closed=t.checked; drawHours(); }});
+$('#hRows').addEventListener('click',e=>{
+  const a=e.target.closest('[data-add]'), x=e.target.closest('[data-rm]');
+  if(a){ const d=W[+a.dataset.add]; const last=d.ranges[d.ranges.length-1]; d.ranges.push(last&&last.close<'17:00'?{open:'19:00',close:'21:00'}:{open:'10:00',close:'13:00'}); drawHours(); }
+  if(x){ const [i,k]=x.dataset.rm.split(':').map(Number); W[i].ranges.splice(k,1); drawHours(); }
+});
 $('#hSave').onclick=busy($('#hSave'),async()=>{
-  const days=[0,1,2,3,4,5,6].map(i=>$('#hc'+i).checked?{closed:true}:{closed:false,open:$('#ho'+i).value,close:$('#hx'+i).value});
+  const days=W.map(d=>d.closed?{closed:true,ranges:[]}:{closed:false,ranges:[...d.ranges].sort((a,b)=>a.open.localeCompare(b.open))});
   await api('hours',{method:'PUT',json:{days,note:$('#hNote').value,confirmed:$('#hConf').checked}});
   S.hours={days,note:$('#hNote').value,confirmed:$('#hConf').checked}; $('#hWarn').hidden=S.hours.confirmed; toast('Hours saved. They are live now.');
 });
@@ -303,7 +325,7 @@ function buildNotice(){
   const upcoming=S.events.filter(e=>e.category!=='closure' && (e.endDate||e.date)>=t && e.date<=soon);
   if(closures.length){ lines.push('RANGE CLOSURES'); closures.forEach(e=>lines.push(`- ${when(e)}: ${e.title}${e.desc?' ('+e.desc+')':''}`)); lines.push(''); }
   if(upcoming.length){ lines.push('COMING UP'); upcoming.forEach(e=>lines.push(`- ${when(e)}: ${e.title}${e.desc?'. '+e.desc:''}`)); lines.push(''); }
-  lines.push('REGULAR HOURS'); ORDER.forEach(i=>{const d=days[i]||{closed:true}; lines.push(`- ${DOW[i]}: ${d.closed?'Closed':fmtT(d.open)+' – '+fmtT(d.close)}`);});
+  lines.push('REGULAR HOURS'); ORDER.forEach(i=>{const r=rangesOf(days[i]); lines.push(`- ${DOW[i]}: ${r.length?r.map(x=>fmtT(x.open)+' – '+fmtT(x.close)).join(' & '):'Closed'}`);});
   if(S.hours?.note) lines.push('',S.hours.note);
   lines.push('','Full calendar: '+location.origin+'/#calendar','',S.notify?.signature||'Stuyvesant Rod & Gun Club','64-69 Dry Harbor Rd, Middle Village, NY 11379 · 718-326-7350');
   $('#nSubj').value = closures.length? 'SRGC schedule update: range closure '+fmtD(closures[0].date) : 'SRGC schedule update';

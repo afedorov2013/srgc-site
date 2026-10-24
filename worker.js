@@ -52,9 +52,29 @@ async function init(env) {
       .bind(e.title, e.category || 'club', e.date, e.endDate || '', e.start || '', e.end || '', e.desc || '', new Date().toISOString()));
     await env.DB.batch(stmts);
   }
+  // v2 hours (several open periods per day). If the stored hours were never confirmed by an officer,
+  // replace them with the club's real schedule from data.json; otherwise convert them in place.
+  const v2 = await env.DB.prepare(`SELECT value FROM settings WHERE key='hours_v2'`).first();
+  if (!v2) {
+    const cur = await getS(env, 'hours', null);
+    let next = cur ? { ...cur, days: (cur.days || []).map(normDay) } : null;
+    if (!cur || !cur.confirmed) {
+      try { const d = await (await env.ASSETS.fetch(new Request('https://assets/data.json'))).json(); if (d.hours) next = { ...d.hours, days: d.hours.days.map(normDay) }; } catch (e) {}
+    }
+    const stmts = [setS(env, 'hours_v2', new Date().toISOString())];
+    if (next) stmts.push(setS(env, 'hours', next));
+    await env.DB.batch(stmts);
+  }
   ready = true;
 }
 const setS = (env, k, v) => env.DB.prepare(`INSERT INTO settings (key,value) VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value`).bind(k, JSON.stringify(v));
+// A day is { closed:true } or { closed:false, ranges:[{open:'10:00',close:'13:00'}, ...] }. Older data used a single open/close.
+function normDay(d) {
+  if (!d || d.closed) return { closed: true, ranges: [] };
+  const r = Array.isArray(d.ranges) ? d.ranges : (d.open && d.close ? [{ open: d.open, close: d.close }] : []);
+  const ranges = r.map(x => ({ open: hhmm(x && x.open), close: hhmm(x && x.close) })).filter(x => x.open && x.close).sort((a, b) => a.open.localeCompare(b.open));
+  return ranges.length ? { closed: false, ranges } : { closed: true, ranges: [] };
+}
 async function getS(env, k, dflt) { const r = await env.DB.prepare(`SELECT value FROM settings WHERE key=?`).bind(k).first(); return r ? JSON.parse(r.value) : dflt; }
 
 // ---------- public ----------
@@ -134,8 +154,18 @@ async function admin(req, env, route) {
   if (route === 'hours' && m === 'PUT') {
     const b = await req.json();
     if (!Array.isArray(b.days) || b.days.length !== 7) return json({ error: 'Hours need all 7 days.' }, 400);
-    const days = b.days.map(d => d.closed ? { closed: true } : { closed: false, open: hhmm(d.open), close: hhmm(d.close) });
-    for (const d of days) if (!d.closed && (!d.open || !d.close || d.close <= d.open)) return json({ error: 'Each open day needs a closing time after its opening time.' }, 400);
+    const DOWN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const d = b.days[i] || {};
+      if (d.closed) { days.push({ closed: true, ranges: [] }); continue; }
+      const r = (Array.isArray(d.ranges) ? d.ranges : []).slice(0, 4).map(x => ({ open: hhmm(x && x.open), close: hhmm(x && x.close) }));
+      if (!r.length) return json({ error: `${DOWN[i]}: add opening hours or tick Closed.` }, 400);
+      for (const x of r) if (!x.open || !x.close || x.close <= x.open) return json({ error: `${DOWN[i]}: each closing time must be after its opening time.` }, 400);
+      r.sort((a, c) => a.open.localeCompare(c.open));
+      for (let k = 1; k < r.length; k++) if (r[k].open < r[k - 1].close) return json({ error: `${DOWN[i]}: the time periods overlap.` }, 400);
+      days.push({ closed: false, ranges: r });
+    }
     await setS(env, 'hours', { days, note: str(b.note, 500), confirmed: !!b.confirmed }).run();
     return json({ ok: true });
   }

@@ -4,48 +4,86 @@
     "text": "Now open after renovations. Come see the upgraded range!"
   },
   "hours": {
-    "confirmed": false,
+    "confirmed": true,
     "note": "Hours can change for classes and events. Check the calendar before you come.",
     "days": [
       {
         "day": "Sunday",
-        "closed": true
+        "closed": false,
+        "ranges": [
+          {
+            "open": "09:00",
+            "close": "13:00"
+          }
+        ]
       },
       {
         "day": "Monday",
         "closed": false,
-        "open": "19:00",
-        "close": "22:00"
+        "ranges": [
+          {
+            "open": "19:00",
+            "close": "21:00"
+          }
+        ]
       },
       {
         "day": "Tuesday",
         "closed": false,
-        "open": "19:00",
-        "close": "22:00"
+        "ranges": [
+          {
+            "open": "19:00",
+            "close": "21:00"
+          }
+        ]
       },
       {
         "day": "Wednesday",
         "closed": false,
-        "open": "19:00",
-        "close": "22:00"
+        "ranges": [
+          {
+            "open": "10:00",
+            "close": "13:00"
+          },
+          {
+            "open": "19:00",
+            "close": "21:00"
+          }
+        ]
       },
       {
         "day": "Thursday",
         "closed": false,
-        "open": "19:00",
-        "close": "22:00"
+        "ranges": [
+          {
+            "open": "19:00",
+            "close": "21:00"
+          }
+        ]
       },
       {
         "day": "Friday",
         "closed": false,
-        "open": "19:00",
-        "close": "22:00"
+        "ranges": [
+          {
+            "open": "10:00",
+            "close": "13:00"
+          },
+          {
+            "open": "19:00",
+            "close": "21:00"
+          }
+        ]
       },
       {
         "day": "Saturday",
         "closed": false,
-        "open": "12:00",
-        "close": "18:00"
+        "ranges": [
+          {
+            "open": "09:00",
+            "close": "13:00"
+          }
+        ]
       }
     ]
   },
