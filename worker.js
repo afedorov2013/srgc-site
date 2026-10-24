@@ -65,9 +65,29 @@ async function init(env) {
     if (next) stmts.push(setS(env, 'hours', next));
     await env.DB.batch(stmts);
   }
+  await applyPatches(env);
   ready = true;
 }
 const setS = (env, k, v) => env.DB.prepare(`INSERT INTO settings (key,value) VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value`).bind(k, JSON.stringify(v));
+// One-time content fixes shipped with a code update. Each runs once, and only touches rows an officer hasn't already changed.
+const PATCHES = [
+  {
+    id: '2026-10-24-ccw-winter',
+    sql: `UPDATE events SET date='2026-12-05', end_date='2026-12-06', start='09:00', "end"='', title='18-hour NYS concealed carry class',
+          descr='Winter Special: $399, including classroom, range time, use of a firearm and ammunition. Open to members and non-members; no license needed. Discount for groups of 2 or more. Classes fill up fast. Email srgctrain@gmail.com to reserve a seat.',
+          updated_at=? WHERE date='2026-10-24' AND lower(title) LIKE '%concealed carry%'`,
+  },
+];
+async function applyPatches(env) {
+  for (const p of PATCHES) {
+    const done = await env.DB.prepare(`SELECT 1 FROM settings WHERE key=?`).bind('patch:' + p.id).first();
+    if (done) continue;
+    await env.DB.batch([
+      env.DB.prepare(p.sql).bind(new Date().toISOString()),
+      setS(env, 'patch:' + p.id, new Date().toISOString()),
+    ]);
+  }
+}
 // A day is { closed:true } or { closed:false, ranges:[{open:'10:00',close:'13:00'}, ...] }. Older data used a single open/close.
 function normDay(d) {
   if (!d || d.closed) return { closed: true, ranges: [] };
